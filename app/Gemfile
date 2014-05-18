@@ -1,0 +1,113 @@
+source 'https://rubygems.org'
+ruby '2.1.2'
+
+gem 'rails', '4.1.1'
+
+gem 'pg'
+
+gem 'hiredis'
+gem 'redis', require: ['redis', 'redis/connection/hiredis']
+gem 'redis-rails'
+
+# FRONTEND
+gem 'jquery-rails'
+gem 'less-rails'
+gem 'sass-rails', '~> 4.0.3'
+gem 'bourbon'
+gem 'uglifier'
+gem 'therubyracer', require: 'v8'
+gem 'slim-rails'
+gem 'ember-rails'
+gem 'emoji'
+gem 'simple_form', '3.1.0.rc1'
+gem 'ember-rails-i18n'
+
+# BACKEND
+gem 'sidekiq'
+
+# https://github.com/mhfs/sidekiq-failures/issues/72
+gem 'sidekiq-failures-discourse', require: 'sidekiq-failures'
+
+gem 'sinatra', require: nil
+# gem 'sentry-raven'
+gem 'active_model_serializers'
+# gem 'bcrypt'
+gem 'oj'
+gem 'redcarpet'
+gem 'fast_xor'
+gem 'lru_redux'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+# gem 'postmark-rails'
+gem 'rack-protection'
+gem 'rack-cors', require: false
+gem 'message_bus'
+# gem 'rails-observers'
+gem 'skylight'
+
+# DEV & TEST
+group :test, :development do
+  # dev helpers
+  gem 'pry-rails'
+  gem 'pry-nav'
+
+  # rspec
+  gem 'rspec-rails', require: false
+  gem 'shoulda', require: false
+  gem 'rspec-given'
+  
+  # javascript tests
+  gem 'teaspoon'
+  gem 'phantomjs'
+  
+  # test assisters
+  gem 'mock_redis'
+  gem 'timecop'
+  gem 'mocha', require: false
+  gem 'fabrication', require: false  
+  gem 'simplecov', require: false
+  gem 'coveralls', require: false
+  gem 'certified', require: false
+  
+  # test backend
+  gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
+  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
+  gem 'listen', '0.7.3', require: false
+
+  # spring
+  gem 'spring'
+  gem 'spring-commands-rspec'
+  gem 'spring-commands-teaspoon'
+end
+
+# TEST
+group :test do
+  gem 'fakeweb', require: false
+  gem 'minitest', require: false
+end
+
+# DEV
+group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  
+  gem 'quiet_assets'
+  
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'terminal-notifier-guard'
+end
+
+group :production do
+  gem 'rails_12factor'
+end
+
+gem 'flamegraph'
+gem 'rack-mini-profiler'
+
+gem 'rbtrace', require: false, platform: :mri
+
+# SERVERS
+gem 'thin', require: false
+gem 'puma', require: false
+gem 'unicorn', require: false

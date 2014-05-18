@@ -1,0 +1,7 @@
+window.assetPath = (function(){
+  var map = {
+    'logo.png': <%= asset_path('logo.png').inspect.html_safe %>
+  };
+
+  return function(asset){ return map[asset]; };
+})();

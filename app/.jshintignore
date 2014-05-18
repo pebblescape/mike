@@ -1,0 +1,5 @@
+vendor
+test/javascripts/test_helper
+test/javascripts/jshint_suite
+test/javascripts/jshint_all
+test/javascripts/support/

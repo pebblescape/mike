@@ -1,0 +1,2 @@
+window.Mike = {};
+Mike.Settings = {};

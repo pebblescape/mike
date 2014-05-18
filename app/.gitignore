@@ -1,0 +1,6 @@
+/.env
+/.bundle
+/coverage
+/log/*.log
+/public/assets/*
+/tmp

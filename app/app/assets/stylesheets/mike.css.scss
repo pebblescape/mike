@@ -1,0 +1,10 @@
+@import 'variables';
+
+body {
+  margin: 10px;
+}
+
+.header {
+  text-transform: uppercase;
+  color: $gray;
+}

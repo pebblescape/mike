@@ -1,0 +1,90 @@
+required:
+  title:
+    client: true
+    default: 'Pebblescape'
+  contact_email: ''
+
+basic:
+  default_locale:
+    default: 'en'
+    enum: 'LocaleSiteSetting'
+    refresh: true
+  allow_user_locale:
+    client: true
+    default: false
+    
+spam:
+  email_domains_blacklist:
+    default: 'mailinator.com'
+    list: true
+  email_domains_whitelist:
+    default: ''
+    list: true
+
+users:
+  login_required:
+    client: true
+    default: false
+  must_approve_users:
+    client: true
+    default: false
+  enable_local_logins:
+    client: true
+    default: true
+  min_username_length:
+    client: true
+    default: 3
+  max_username_length:
+    client: true
+    default: 15
+    hidden: true
+  min_password_length:
+    client: true
+    default: 8
+  block_common_passwords: true
+  enable_google_logins:
+    client: true
+    default: true
+  enable_facebook_logins:
+    client: true
+    default: true
+  facebook_app_id: ''
+  facebook_app_secret: ''
+  enable_github_logins:
+    client: true
+    default: false
+  github_client_id: ''
+  github_client_secret: ''
+  username_change_period: 3
+  email_editable: true
+
+security:
+  use_https: false
+
+developer:
+  force_hostname: ''
+  port:
+    default:
+      development: 500
+      default: ''
+  queue_jobs:
+    default:
+      test: false
+      default: true
+  enable_long_polling:
+    client: true
+    default: true
+  long_polling_interval: 15000
+  polling_interval:
+    client: true
+    default: 3000
+  anon_polling_interval:
+    client: true
+    default: 30000
+  flush_timings_secs:
+    client: true
+    default: 5
+  active_user_rate_limit_secs: 60
+
+uncategorized:
+  previous_visit_timeout_hours: 1
