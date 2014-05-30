@@ -8,11 +8,6 @@ if [ -e "/etc/.provisioned" ] ; then
   exit 0
 fi
 
-cat > /etc/resolv.conf <<EOF
-nameserver 8.8.8.8
-nameserver 8.8.4.4
-EOF
-
 apt-get -qq update
 DEBIAN_FRONTEND=noninteractive apt-get -qq install -y python-software-properties git-core linux-image-extra-`uname -r` lxc wget libxml2-dev
 echo deb https://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list

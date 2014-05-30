@@ -1,5 +1,7 @@
 reload_settings = lambda {
   begin
+    config = Rails.application.config.database_configuration[Rails.env]
+    ActiveRecord::Base.establish_connection(config)
     SiteSetting.refresh!
   rescue ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError
     # This will happen when migrating a new database
