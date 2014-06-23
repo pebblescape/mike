@@ -1,2 +1,0 @@
-window.Mike = {};
-Mike.Settings = {};
