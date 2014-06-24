@@ -8,11 +8,31 @@ Bundler.require(*Rails.groups)
 
 module Mike
   class Application < Rails::Application
+    require 'mike'
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
+    
+    require 'rails_redis'    
+    # Use redis for our cache
+    config.cache_store = RailsRedis.new_redis_store
+
+    # http cache upstream
+    config.action_dispatch.rack_cache = nil
+    
+    config.active_record.thread_safe!    
+    config.active_record.schema_format = :sql
+    
+    # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
+    config.pbkdf2_iterations = 64000
+    config.pbkdf2_algorithm = "sha256"
+    
+    config.generators do |g|
+      g.test_framework :rspec
+    end
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.

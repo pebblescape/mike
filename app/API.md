@@ -8,14 +8,17 @@ Entire API is JSON
     * username
     * key - public key
   * Returns: true or false
-* POST /release - create new release
+* POST /apps/{app}/builds - create build
   * Params:
-    * app
+    * process_types*
+    * buildpack_desc
+    * commit
+    * size
   * Returns:
-    * release_id
-* POST /deploy - deploy release
+    * id
+* POST /apps/{app}/releases - deploy build
   * Params:
-    * app
-    * release_id
+    * build_id*
+    * description
   * Returns:
-    * ?
+    * version

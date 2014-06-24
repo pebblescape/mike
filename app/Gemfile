@@ -4,6 +4,7 @@ gem 'rails', '4.1.1'
 gem 'pg'
 gem 'hiredis'
 gem 'redis', require: ['redis', 'redis/connection/hiredis']
+gem 'redis-rails'
 
 # gem 'sidekiq'
 # gem 'sidekiq-failures-discourse', require: 'sidekiq-failures'
@@ -21,6 +22,7 @@ gem 'redis', require: ['redis', 'redis/connection/hiredis']
 gem 'active_model_serializers'
 gem 'oj'
 gem 'rack-cors', require: false
+gem 'versionist'
 
 
 # DEV & TEST
