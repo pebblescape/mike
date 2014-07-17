@@ -52,7 +52,9 @@ def freeze_time(now=Time.now)
   Time.stubs(:now).returns(Time.parse(now.to_s))
 end
 
-Spring.after_fork do
-  # This code will be run each time you run your specs.
-  Mike.after_fork
+if defined?(Spring)
+  Spring.after_fork do
+    # This code will be run each time you run your specs.
+    Mike.after_fork
+  end
 end
