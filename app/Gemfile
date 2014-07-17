@@ -23,6 +23,7 @@ gem 'active_model_serializers'
 gem 'oj'
 gem 'rack-cors', require: false
 gem 'versionist'
+gem 'ci_reporter'
 
 
 # DEV & TEST
