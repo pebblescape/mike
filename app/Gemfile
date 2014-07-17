@@ -36,6 +36,7 @@ group :test, :development do
   gem 'rspec-rails', require: false
   gem 'shoulda', require: false
   gem 'rspec-given'
+  gem 'rspec-legacy_formatters'
   
   # test assisters
   gem 'mock_redis'

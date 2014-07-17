@@ -11,6 +11,7 @@ if ENV["RAILS_ENV"] == "test" || ENV["RAILS_ENV"] == "development"
       rm_rf rspec_report_path
       mkdir_p rspec_report_path
     end
+    
     RSpec::Core::RakeTask.new(:spec) do |t|
       t.rspec_opts = "--format CI::Reporter::RSpec --color --tty --no-drb"
     end

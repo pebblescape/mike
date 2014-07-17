@@ -149,6 +149,9 @@ GEM
     rspec-given (3.5.4)
       given_core (= 3.5.4)
       rspec (>= 2.12)
+    rspec-legacy_formatters (1.0.0)
+      rspec-core (>= 3.0.0.beta2)
+      rspec-support (>= 3.0.0.beta2)
     rspec-mocks (3.0.2)
       rspec-support (~> 3.0.0)
     rspec-rails (3.0.1)
@@ -241,6 +244,7 @@ DEPENDENCIES
   redis
   redis-rails
   rspec-given
+  rspec-legacy_formatters
   rspec-rails
   shoulda
   simplecov
