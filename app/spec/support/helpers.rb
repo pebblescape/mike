@@ -8,4 +8,8 @@ module Helpers
   def build(*args)
     Fabricate.build(*args)
   end
+  
+  def api_header(version = '1')
+    {'Accept' => "application/vnd.pebblescape+json; version=#{version}"}
+  end
 end

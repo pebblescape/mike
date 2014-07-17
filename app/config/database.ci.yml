@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: docker
+  password: docker
+
+development:
+  <<: *default
+  database: mike_dev
+
+test:
+  <<: *default
+  database: mike_test
+
+production:
+  <<: *default
+  database: mike_prod
