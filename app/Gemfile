@@ -35,7 +35,7 @@ group :test, :development do
   gem 'pry-nav'
 
   # rspec
-  gem 'rspec-rails', require: false
+  gem 'rspec-rails'
   gem 'shoulda', require: false
   gem 'rspec-given'
   gem 'rspec-legacy_formatters'
