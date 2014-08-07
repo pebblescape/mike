@@ -15,6 +15,7 @@ module Mike
     # -- all .rb files in that directory are automatically loaded.
     
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
+    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
     
     require 'rails_redis'    
     # Use redis for our cache

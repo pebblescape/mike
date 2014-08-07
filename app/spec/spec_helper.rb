@@ -45,6 +45,25 @@ RSpec.configure do |config|
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
+  
+  config.before(:suite) do
+    # Sidekiq.error_handlers.clear
+
+    Mike.current_user_provider = TestCurrentUserProvider
+  end
+
+  class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
+    def log_on_user(user,session,cookies)
+      session[:current_user_id] = user.id
+      super
+    end
+
+    def log_off_user(session,cookies)
+      session[:current_user_id] = nil
+      super
+    end
+  end
+
 end
 
 def freeze_time(now=Time.now)

@@ -23,7 +23,9 @@ gem 'active_model_serializers'
 gem 'oj'
 gem 'rack-cors', require: false
 gem 'versionist'
-gem 'ci_reporter'
+gem 'ci_reporter_rspec'
+gem 'fast_xor'
+gem 'lru_redux'
 
 
 # DEV & TEST
