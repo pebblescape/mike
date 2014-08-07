@@ -12,5 +12,11 @@ describe ApiKey do
     Fabricate(:api_key)
     should validate_uniqueness_of(:user_id)
   end
-
+  
+  it 'creates a master key' do
+    Fabricate(:user, id: Mike::SYSTEM_USER_ID)
+    key = ApiKey.create_master_key
+    expect(key.key.length).to eq 64
+    expect(key.created_by).to eq Mike.system_user
+  end
 end

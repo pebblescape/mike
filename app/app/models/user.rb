@@ -48,19 +48,6 @@ class User < ActiveRecord::Base
     User.email_hash(email)
   end
   
-  # Indicate that this is NOT a passwordless account for the purposes of validation
-  def password_required!
-    @password_required = true
-  end
-
-  def password_required?
-    !!@password_required
-  end
-
-  def has_password?
-    password_hash.present?
-  end
-  
   def downcase_email
     self.email = self.email.downcase if self.email
   end
