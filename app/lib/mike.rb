@@ -4,6 +4,9 @@ module Mike
   # When they don't have permission to do something
   class InvalidAccess < Exception; end
   
+  # When they try to do something they should be logged in for
+  class NotLoggedIn < Exception; end
+  
   SYSTEM_USER_ID = -1 unless defined? SYSTEM_USER_ID
 
   def self.system_user
