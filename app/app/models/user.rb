@@ -4,6 +4,8 @@ require_dependency 'mike'
 class User < ActiveRecord::Base
   has_one :api_key, dependent: :destroy
   
+  has_many :ssh_keys, dependent: :destroy
+  
   before_validation :downcase_email
 
   validates_presence_of :name

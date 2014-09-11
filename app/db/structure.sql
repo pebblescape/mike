@@ -72,6 +72,39 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: ssh_keys; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE ssh_keys (
+    id integer NOT NULL,
+    user_id integer,
+    key text NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    fingerprint character varying(255) NOT NULL
+);
+
+
+--
+-- Name: ssh_keys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE ssh_keys_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ssh_keys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE ssh_keys_id_seq OWNED BY ssh_keys.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -119,6 +152,13 @@ ALTER TABLE ONLY api_keys ALTER COLUMN id SET DEFAULT nextval('api_keys_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY ssh_keys ALTER COLUMN id SET DEFAULT nextval('ssh_keys_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
@@ -128,6 +168,14 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 ALTER TABLE ONLY api_keys
     ADD CONSTRAINT api_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ssh_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY ssh_keys
+    ADD CONSTRAINT ssh_keys_pkey PRIMARY KEY (id);
 
 
 --
@@ -150,6 +198,20 @@ CREATE INDEX index_api_keys_on_key ON api_keys USING btree (key);
 --
 
 CREATE UNIQUE INDEX index_api_keys_on_user_id ON api_keys USING btree (user_id);
+
+
+--
+-- Name: index_ssh_keys_on_fingerprint; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_ssh_keys_on_fingerprint ON ssh_keys USING btree (fingerprint);
+
+
+--
+-- Name: index_ssh_keys_on_key; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_ssh_keys_on_key ON ssh_keys USING btree (key);
 
 
 --
@@ -182,4 +244,8 @@ SET search_path TO "$user",public;
 INSERT INTO schema_migrations (version) VALUES ('20140807103256');
 
 INSERT INTO schema_migrations (version) VALUES ('20140807104650');
+
+INSERT INTO schema_migrations (version) VALUES ('20140911094402');
+
+INSERT INTO schema_migrations (version) VALUES ('20140911102130');
 
