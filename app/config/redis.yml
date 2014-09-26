@@ -1,8 +1,13 @@
 defaults: &defaults
+  <% if ENV['REDIS_PORT_6379_TCP_ADDR'] %>
+  host: <%= ENV['REDIS_PORT_6379_TCP_ADDR'] %>
+  port: <%= ENV['REDIS_PORT_6379_TCP_PORT'] %>
+  <% else %>
   uri: <%= uri = URI.parse(ENV['REDIS_URL'] || "redis://localhost:6379") %>
   host: <%= uri.host %>
   port: <%= uri.port %>
   password: <%= uri.password %>
+  <% end %>
   db: 0
 
 development:

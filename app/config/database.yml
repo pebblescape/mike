@@ -2,12 +2,14 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: kris
-  password:
+  host: <%= ENV['DB_PORT_5432_TCP_ADDR'] || "localhost" %>
+  port: <%= ENV['DB_PORT_5432_TCP_PORT'] || 5432 %>
+  username: <%= ENV['DBUSER'] || "kris" %>
+  password: <%= ENV['DBPASS'] || "" %>
 
 development:
   <<: *default
-  database: mike_dev
+  database: <%= ENV['DBNAME'] || "mike_dev" %>
 
 test:
   <<: *default
@@ -15,4 +17,4 @@ test:
 
 production:
   <<: *default
-  database: mike_prod
+  database: <%= ENV['DBNAME'] || "mike_prod" %>
