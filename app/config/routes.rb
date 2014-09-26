@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :apps
     resources :users
     
-    post 'auth' => 'users#auth'
+    get 'auth' => 'users#auth'
   end
   
   get "login" => "static#show", id: "login"
