@@ -7,7 +7,7 @@ Entire API is JSON
   * Params:
     * username
     * key - public key
-  * Returns: true or false
+  * Returns: user json for success, 404 on failure
 * POST /apps/{app}/builds - create build
   * Params:
     * process_types*
