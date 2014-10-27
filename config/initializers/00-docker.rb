@@ -1,7 +1,7 @@
 require 'docker'
 
 # boot2docker configuration
-if ENV['DOCKER_HOST'].start_with?('tcp:') && ENV['DOCKER_CERT_PATH']
+if ENV['DOCKER_HOST'] && ENV['DOCKER_HOST'].start_with?('tcp:') && ENV['DOCKER_CERT_PATH']
   ENV['DOCKER_HOST'] = ENV['DOCKER_HOST'].sub('tcp', 'https')
   cert_path = File.expand_path ENV['DOCKER_CERT_PATH']
   Docker.options = {
