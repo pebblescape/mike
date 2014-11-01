@@ -17,10 +17,25 @@ class ApplicationController < ActionController::Base
     else
       json_error(403, 'not_logged_in')
     end
-
+  end
+  
+  rescue_from Mike::NotFound do
+    rescue_mike_actions("[error: 'not found']", 404)
   end
   
   private
+  
+  def rescue_mike_actions(message, error, include_ember=false)
+    if request.format && request.format.json?
+      render status: error, layout: false, text: message
+    else
+      render text: build_not_found_page(error)
+    end
+  end
+  
+  def build_not_found_page(status=404)
+    render_to_string status: status, formats: [:html], template: '/exceptions/not_found'
+  end
   
   def mini_profiler_enabled?
     defined?(Rack::MiniProfiler)

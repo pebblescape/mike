@@ -6,16 +6,18 @@ gem 'pg'
 gem 'hiredis'
 gem 'redis', require: ['redis', 'redis/connection/hiredis']
 gem 'redis-rails'
-
-# gem 'sidekiq'
-# gem 'sidekiq-failures-discourse', require: 'sidekiq-failures'
-# gem 'sinatra', require: nil
+gem 'sidekiq'
+gem 'sinatra', require: nil
 
 # # ASSETS
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 gem 'therubyracer', require: 'v8'
 gem 'jquery-rails'
+gem 'ember-rails'
+gem 'ember-source'
+gem 'handlebars-source'
+gem 'barber'
 
 # BACKEND
 # gem 'sentry-raven'

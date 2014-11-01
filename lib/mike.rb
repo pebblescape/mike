@@ -7,6 +7,9 @@ module Mike
   # When they try to do something they should be logged in for
   class NotLoggedIn < Exception; end
   
+  # Page not found
+  class NotFound < Exception; end
+  
   SYSTEM_USER_ID = -1 unless defined? SYSTEM_USER_ID
 
   def self.system_user
@@ -36,7 +39,7 @@ module Mike
   # in a bad state
   def self.after_fork
     # MessageBus.after_fork
-    $redis.client.reconnect
+    $redis.reconnect
     Rails.cache.reconnect
     # Logster.store.redis.reconnect
     # shuts down all connections in the pool

@@ -17,6 +17,31 @@ class RailsRedis
 
     @config
   end
+  
+  def initialize
+    @config = RailsRedis.config
+    @redis = RailsRedis.raw_connection(@config)
+  end
+
+  def url
+    self.class.url(@config)
+  end
+  
+  def method_missing(meth, *args, &block)
+    if @redis.respond_to?(meth)
+      @redis.send(meth, *args, &block)
+    else
+      super
+    end
+  end
+  
+  def flushdb
+    keys.each{|k| del(k)}
+  end
+
+  def reconnect
+    @redis.client.reconnect
+  end
 
   def self.url(config)
     pass = config['password'] ? ":#{config['password']}@" : ""

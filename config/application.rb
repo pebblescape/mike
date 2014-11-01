@@ -21,6 +21,7 @@ module Mike
     require 'rails_redis'    
     # Use redis for our cache
     config.cache_store = RailsRedis.new_redis_store
+    $redis = RailsRedis.new
 
     # http cache upstream
     config.action_dispatch.rack_cache = nil
@@ -35,6 +36,14 @@ module Mike
     config.generators do |g|
       g.test_framework :rspec
     end
+    
+    # Our templates shouldn't start with 'mike/templates'
+    config.handlebars.templates_root = 'mike/templates'
+    
+    # ember stuff only used for asset precompliation, production variant plays up
+    config.ember.variant = :development
+    config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
+    config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
