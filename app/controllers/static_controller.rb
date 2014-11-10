@@ -3,13 +3,11 @@ class StaticController < ApplicationController
 
   def show
     return redirect_to('/') if current_user && params[:id] == 'login'
-
-    if I18n.exists?("static.#{@page}")
-      render text: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
-      return
-    end
     
     @page = params[:id]
+    
+    # Don't allow paths like ".." or "/" or anything hacky like that
+    @page.gsub!(/[^a-z0-9\_\-]/, '')
 
     file = "static/#{@page}.#{I18n.locale}"
     file = "static/#{@page}.en" if lookup_context.find_all("#{file}.html").empty?

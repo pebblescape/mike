@@ -1,0 +1,25 @@
+{
+  "ignored_warnings":[
+    {
+      "warning_type":"Dynamic Render Path",
+      "warning_code":15,
+      "fingerprint":"406a1b7dea9b46033a4b055bae92229d884d2be5d87461c38725c95500408720",
+      "message":"Render path contains parameter value",
+      "file":"app/controllers/static_controller.rb",
+      "line":17,
+      "link":"http://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code":"render(action => ((\"static/#{params[:id]}.#{I18n.locale}\" or \"static/#{params[:id]}.en\") or \"static/#{params[:id]}\"), { :layout => ((not request.xhr?)), :formats => ([:html]) })",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"StaticController",
+        "method":"show"
+      },
+      "user_input":"params[:id]",
+      "confidence":"High",
+      "note":""
+    }
+  ],
+  "updated":"2014-11-10 13:15:20 +0200",
+  "brakeman_version":"2.6.3"
+}
