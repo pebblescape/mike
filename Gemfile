@@ -83,6 +83,8 @@ group :production do
   gem 'rails_12factor'
 end
 
+gem 'brakeman', require: false
+
 # SERVERS
 gem 'thin', require: false
 gem 'puma', require: false
