@@ -1,5 +1,7 @@
 class StaticController < ApplicationController
-  skip_before_filter :redirect_to_login_if_required
+  skip_before_filter :redirect_to_login_if_required, only: [:show]
+  
+  layout :set_layout
 
   def show
     return redirect_to('/') if current_user && params[:id] == 'login'
@@ -19,5 +21,11 @@ class StaticController < ApplicationController
     end
 
     raise Mike::NotFound
+  end
+  
+  private
+  
+  def set_layout
+    params[:id] == 'login' ? 'no_js' : 'application'
   end
 end

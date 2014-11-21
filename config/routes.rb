@@ -1,6 +1,8 @@
 require "sidekiq/web"
 require_dependency "admin_constraint"
 
+USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/ unless defined? USERNAME_ROUTE_FORMAT
+
 Rails.application.routes.draw do
   if Rails.env.development?
     mount Sidekiq::Web => "/sidekiq"
@@ -16,8 +18,16 @@ Rails.application.routes.draw do
   end
   
   resources :static
-  post "login" => "static#enter"
-  
   get "login" => "static#show", id: "login"
-  root "static#root"
+  
+  resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy, :become] do
+    collection do
+      post "forgot_password"
+    end
+  end
+  
+  get "session/current" => "session#current"
+  get "session/csrf" => "session#csrf"
+  
+  root "apps#index"
 end

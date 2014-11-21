@@ -11,6 +11,7 @@ gem 'sinatra', require: nil
 
 # # ASSETS
 gem 'sass-rails', '~> 4.0.3'
+gem 'less-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'therubyracer', require: 'v8'
 gem 'jquery-rails'
