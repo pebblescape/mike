@@ -24,3 +24,6 @@ en:
   errors:
     not_logged_in: 'Invalid API key or no API key specified.'
     invalid_ssh_key: 'No such SSH key found.'
+  
+  login:
+    incorrect_username_email_or_password: "Incorrect username, email or password"

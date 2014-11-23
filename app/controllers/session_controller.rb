@@ -19,7 +19,7 @@ class SessionController < ApplicationController
     login = params[:login].strip
     login = login[1..-1] if login[0] == "@"
 
-    if user = User.find_by_username_or_email(login)
+    if user = User.find_by_email(login)
 
       # If their password is correct
       unless user.confirm_password?(params[:password])
@@ -31,7 +31,7 @@ class SessionController < ApplicationController
       return
     end
 
-    (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
+    login(user)
   end
 
   def forgot_password
@@ -40,7 +40,7 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    user = User.find_by_username_or_email(params[:login])
+    user = User.find_by_email(params[:login])
     if user.present?
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)

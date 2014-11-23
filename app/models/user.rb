@@ -22,6 +22,10 @@ class User < ActiveRecord::Base
     user.email = params[:email]
     user
   end
+  
+  def self.max_password_length
+    200
+  end
 
   # Find a user by temporary key, nil if not found or key is invalid
   def self.find_by_temporary_key(key)
@@ -88,6 +92,15 @@ class User < ActiveRecord::Base
   
   def password=(password)
     @raw_password = password unless password.blank?
+  end
+  
+  # Indicate that this is NOT a passwordless account for the purposes of validation
+  def password_required!
+    @password_required = true
+  end
+
+  def password_required?
+    !!@password_required
   end
   
   def password

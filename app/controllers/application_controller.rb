@@ -59,4 +59,26 @@ class ApplicationController < ActionController::Base
   def json_error(status=403, id='invalid_access')
     render status: status, json: { id: id, message: I18n.t("errors.#{id}")}
   end
+  
+  def serialize_data(obj, serializer, opts={})
+    # If it's an array, apply the serializer as an each_serializer to the elements
+    if obj.respond_to?(:to_ary)
+      opts[:each_serializer] = serializer
+      ActiveModel::ArraySerializer.new(obj.to_ary, opts).as_json
+    else
+      serializer.new(obj, opts).as_json
+    end
+  end
+
+  # This is odd, but it seems that in Rails `render json: obj` is about
+  # 20% slower than calling MultiJSON.dump ourselves. I'm not sure why
+  # Rails doesn't call MultiJson.dump when you pass it json: obj but
+  # it seems we don't need whatever Rails is doing.
+  def render_serialized(obj, serializer, opts={})
+    render_json_dump(serialize_data(obj, serializer, opts))
+  end
+
+  def render_json_dump(obj)
+    render json: MultiJson.dump(obj)
+  end
 end

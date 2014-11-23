@@ -31,6 +31,7 @@ gem 'ci_reporter_rspec'
 gem 'fast_xor'
 gem 'lru_redux'
 gem 'docker-api'
+gem 'highline'
 
 
 # DEV & TEST
