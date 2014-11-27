@@ -2,7 +2,8 @@
 class App < ActiveRecord::Base
   belongs_to :owner, class_name: User
   
-  has_many :builds
+  has_many :builds, dependent: :destroy
+  has_many :releases, dependent: :destroy
 
   validates_presence_of :name
   validates_uniqueness_of :name

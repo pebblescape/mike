@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   
   has_many :apps, foreign_key: :owner_id, dependent: :destroy
   has_many :builds, dependent: :destroy
+  has_many :releases, dependent: :destroy
   has_many :ssh_keys, dependent: :destroy
   
   before_validation :downcase_email
