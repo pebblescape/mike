@@ -23,6 +23,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -34,32 +48,26 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE api_keys (
-    id integer NOT NULL,
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
     key character varying(64) NOT NULL,
-    user_id integer,
-    created_by_id integer,
+    user_id uuid,
+    created_by_id uuid,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
 
 
 --
--- Name: api_keys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: apps; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE SEQUENCE api_keys_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: api_keys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE api_keys_id_seq OWNED BY api_keys.id;
+CREATE TABLE apps (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    owner_id uuid,
+    name character varying(255) NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
 
 
 --
@@ -76,8 +84,8 @@ CREATE TABLE schema_migrations (
 --
 
 CREATE TABLE ssh_keys (
-    id integer NOT NULL,
-    user_id integer,
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    user_id uuid,
     key text NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -86,30 +94,11 @@ CREATE TABLE ssh_keys (
 
 
 --
--- Name: ssh_keys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE ssh_keys_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: ssh_keys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE ssh_keys_id_seq OWNED BY ssh_keys.id;
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE users (
-    id integer NOT NULL,
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
     name character varying(255),
     email character varying(255) NOT NULL,
     password_hash character varying(64),
@@ -123,51 +112,19 @@ CREATE TABLE users (
 
 
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE users_id_seq OWNED BY users.id;
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY api_keys ALTER COLUMN id SET DEFAULT nextval('api_keys_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY ssh_keys ALTER COLUMN id SET DEFAULT nextval('ssh_keys_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
-
-
---
 -- Name: api_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY api_keys
     ADD CONSTRAINT api_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: apps_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY apps
+    ADD CONSTRAINT apps_pkey PRIMARY KEY (id);
 
 
 --
@@ -198,6 +155,13 @@ CREATE INDEX index_api_keys_on_key ON api_keys USING btree (key);
 --
 
 CREATE UNIQUE INDEX index_api_keys_on_user_id ON api_keys USING btree (user_id);
+
+
+--
+-- Name: index_apps_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_apps_on_name ON apps USING btree (name);
 
 
 --
@@ -241,6 +205,8 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 SET search_path TO "$user",public;
 
+INSERT INTO schema_migrations (version) VALUES ('1');
+
 INSERT INTO schema_migrations (version) VALUES ('20140807103256');
 
 INSERT INTO schema_migrations (version) VALUES ('20140807104650');
@@ -248,4 +214,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140807104650');
 INSERT INTO schema_migrations (version) VALUES ('20140911094402');
 
 INSERT INTO schema_migrations (version) VALUES ('20140911102130');
+
+INSERT INTO schema_migrations (version) VALUES ('20141126134134');
 

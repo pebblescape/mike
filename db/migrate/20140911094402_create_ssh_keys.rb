@@ -1,7 +1,7 @@
 class CreateSshKeys < ActiveRecord::Migration
   def change
-    create_table :ssh_keys do |t|
-      t.integer :user_id
+    create_table :ssh_keys, id: :uuid do |t|
+      t.uuid :user_id
       t.text    :key,     null: false
       
       t.timestamps

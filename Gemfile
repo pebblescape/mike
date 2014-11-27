@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.1.4'
 
-gem 'rails', '4.1.7'
+gem 'rails', '4.1.8'
 gem 'pg'
 gem 'hiredis'
 gem 'redis', require: ['redis', 'redis/connection/hiredis']
@@ -10,15 +10,16 @@ gem 'sidekiq'
 gem 'sinatra', require: nil
 
 # # ASSETS
-gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails', '~> 4.0.5'
 gem 'less-rails'
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier'
 gem 'therubyracer', require: 'v8'
 gem 'jquery-rails'
 gem 'ember-rails'
 gem 'ember-source'
 gem 'handlebars-source'
 gem 'barber'
+gem 'slim'
 
 # BACKEND
 # gem 'sentry-raven'
@@ -73,8 +74,7 @@ end
 
 # DEV
 group :development do
-  gem 'better_errors'
-  gem 'binding_of_caller'
+  gem 'web-console', '~> 2.0'
   
   gem 'guard'
   gem 'guard-rspec'

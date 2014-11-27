@@ -6,7 +6,7 @@ describe PasswordValidator do
   subject(:validate) { validator.validate_each(record,:password,@password) }
 
   context "password required" do
-    let(:record) { u = Fabricate.build(:user, password: @password); u }
+    let(:record) { u = Fabricate.build(:user, password: @password); u.password_required!; u }
 
     context "password is not common" do
       context "min password length is 8" do

@@ -17,14 +17,14 @@ describe Auth::DefaultCurrentUserProvider do
 
   it "finds a user for a correct per-user api key" do
     user = Fabricate(:user)
-    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
+    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: Mike::SYSTEM_USER_ID)
     expect(provider("/?api_key=hello").current_user.id).to eq user.id
   end
 
   it "raises for a user pretending" do
     user = Fabricate(:user)
     user2 = Fabricate(:user)
-    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
+    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: Mike::SYSTEM_USER_ID)
 
     expect{
       provider("/?api_key=hello&api_email=#{user2.email}").current_user
@@ -33,7 +33,7 @@ describe Auth::DefaultCurrentUserProvider do
 
   it "finds a user for a correct system api key" do
     user = Fabricate(:user)
-    ApiKey.create!(key: "hello", created_by_id: -1)
+    ApiKey.create!(key: "hello", created_by_id: Mike::SYSTEM_USER_ID)
     expect(provider("/?api_key=hello&api_email=#{user.email}").current_user.id).to eq user.id
   end
 end

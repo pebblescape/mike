@@ -4,6 +4,7 @@ require_dependency 'mike'
 class User < ActiveRecord::Base
   has_one :api_key, dependent: :destroy
   
+  has_many :apps, foreign_key: :owner_id, dependent: :destroy
   has_many :ssh_keys, dependent: :destroy
   
   before_validation :downcase_email
@@ -31,7 +32,7 @@ class User < ActiveRecord::Base
   def self.find_by_temporary_key(key)
     user_id = $redis.get("temporary_key:#{key}")
     if user_id.present?
-      find_by(id: user_id.to_i)
+      find_by(id: user_id)
     end
   end
 

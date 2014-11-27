@@ -10,7 +10,7 @@ module Mike
   # Page not found
   class NotFound < Exception; end
   
-  SYSTEM_USER_ID = -1 unless defined? SYSTEM_USER_ID
+  SYSTEM_USER_ID = "10b32814-f3d1-4cad-b701-50e06ae50e73" unless defined? SYSTEM_USER_ID
 
   def self.system_user
     User.find_by(id: SYSTEM_USER_ID)
