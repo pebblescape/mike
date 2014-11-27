@@ -33,4 +33,5 @@ end
 #
 #  index_ssh_keys_on_fingerprint  (fingerprint)
 #  index_ssh_keys_on_key          (key)
+#  index_ssh_keys_on_user_id      (user_id)
 #

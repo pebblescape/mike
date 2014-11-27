@@ -20,5 +20,6 @@ end
 #
 # Indexes
 #
-#  index_apps_on_name  (name)
+#  index_apps_on_name      (name)
+#  index_apps_on_owner_id  (owner_id)
 #

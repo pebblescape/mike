@@ -191,6 +191,13 @@ CREATE INDEX index_apps_on_name ON apps USING btree (name);
 
 
 --
+-- Name: index_apps_on_owner_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_apps_on_owner_id ON apps USING btree (owner_id);
+
+
+--
 -- Name: index_builds_on_app_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -216,6 +223,13 @@ CREATE INDEX index_ssh_keys_on_fingerprint ON ssh_keys USING btree (fingerprint)
 --
 
 CREATE INDEX index_ssh_keys_on_key ON ssh_keys USING btree (key);
+
+
+--
+-- Name: index_ssh_keys_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_ssh_keys_on_user_id ON ssh_keys USING btree (user_id);
 
 
 --
@@ -258,4 +272,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140911102130');
 INSERT INTO schema_migrations (version) VALUES ('20141126134134');
 
 INSERT INTO schema_migrations (version) VALUES ('20141127151446');
+
+INSERT INTO schema_migrations (version) VALUES ('20141127152326');
 
