@@ -17,3 +17,20 @@ class SshKey < ActiveRecord::Base
     self.fingerprint = pubkey.gsub!(COLONS, '\1:')
   end
 end
+
+# == Schema Information
+#
+# Table name: ssh_keys
+#
+#  id          :uuid             not null, primary key
+#  user_id     :uuid
+#  key         :text             not null
+#  created_at  :datetime
+#  updated_at  :datetime
+#  fingerprint :string(255)      not null
+#
+# Indexes
+#
+#  index_ssh_keys_on_fingerprint  (fingerprint)
+#  index_ssh_keys_on_key          (key)
+#

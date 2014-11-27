@@ -122,3 +122,24 @@ class User < ActiveRecord::Base
     Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
   end
 end
+
+# == Schema Information
+#
+# Table name: users
+#
+#  id            :uuid             not null, primary key
+#  name          :string(255)
+#  email         :string(255)      not null
+#  password_hash :string(64)
+#  salt          :string(32)
+#  auth_token    :string(32)
+#  admin         :boolean          default(FALSE), not null
+#  active        :boolean          default(FALSE), not null
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+# Indexes
+#
+#  index_users_on_auth_token  (auth_token)
+#  index_users_on_email       (email) UNIQUE
+#
