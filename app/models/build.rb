@@ -1,5 +1,6 @@
 require_dependency 'enum'
 
+# TODO: delete images etc when deleting
 class Build < ActiveRecord::Base
   belongs_to :app
   belongs_to :user

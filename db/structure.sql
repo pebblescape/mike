@@ -71,6 +71,24 @@ CREATE TABLE apps (
 
 
 --
+-- Name: builds; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE builds (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    user_id uuid,
+    app_id uuid,
+    status integer NOT NULL,
+    buildpack_description character varying(255),
+    commit character varying(255),
+    process_types text NOT NULL,
+    size integer NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -128,6 +146,14 @@ ALTER TABLE ONLY apps
 
 
 --
+-- Name: builds_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY builds
+    ADD CONSTRAINT builds_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ssh_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -162,6 +188,20 @@ CREATE UNIQUE INDEX index_api_keys_on_user_id ON api_keys USING btree (user_id);
 --
 
 CREATE INDEX index_apps_on_name ON apps USING btree (name);
+
+
+--
+-- Name: index_builds_on_app_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_builds_on_app_id ON builds USING btree (app_id);
+
+
+--
+-- Name: index_builds_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_builds_on_user_id ON builds USING btree (user_id);
 
 
 --
@@ -216,4 +256,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140911094402');
 INSERT INTO schema_migrations (version) VALUES ('20140911102130');
 
 INSERT INTO schema_migrations (version) VALUES ('20141126134134');
+
+INSERT INTO schema_migrations (version) VALUES ('20141127151446');
 

@@ -75,6 +75,7 @@ end
 # DEV
 group :development do
   gem 'web-console', '~> 2.0'
+  gem 'annotate'
   
   gem 'guard'
   gem 'guard-rspec'
