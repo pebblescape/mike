@@ -45,16 +45,16 @@ class SessionController < ApplicationController
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
-    
+
     render json: { result: "ok" }
 
   rescue RateLimiter::LimitExceeded
-    render_json_error(I18n.t("rate_limiter.slow_down"))
+    json_error(429, I18n.t("rate_limiter.slow_down"))
   end
 
   def current
     if current_user.present?
-      render_serialized(current_user, CurrentUserSerializer)
+      render json: current_user, serializer: CurrentUserSerializer
     else
       render nothing: true, status: 404
     end
@@ -67,14 +67,14 @@ class SessionController < ApplicationController
   end
 
   private
-  
+
   def invalid_credentials
     render json: {error: I18n.t("login.incorrect_username_email_or_password")}
   end
 
   def login(user)
     log_on_user(user)
-    render_serialized(user, UserSerializer)
+    render json: current_user, serializer: CurrentUserSerializer
   end
 
 end

@@ -8,6 +8,6 @@ class V1::AppsController < ApiController
 
     app = App.find(params[:id])
     # TODO: app ownership check here
-    render_serialized(app, AppSerializer)
+    render json: app
   end
 end
