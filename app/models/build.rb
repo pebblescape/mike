@@ -4,15 +4,15 @@ require_dependency 'enum'
 class Build < ActiveRecord::Base
   belongs_to :app
   belongs_to :user
-  
+
   has_many :releases
-  
-  serialize :process_types
 
   validates_presence_of :status
   validates_presence_of :process_types
   validates_presence_of :size
-  
+
+  serialize :process_types
+
   def self.status_types
     @status_types ||= Enum.new(:pending, :failed, :succeeded)
   end

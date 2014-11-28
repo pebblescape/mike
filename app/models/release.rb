@@ -5,6 +5,8 @@ class Release < ActiveRecord::Base
 
   validates_presence_of :description
   validates_presence_of :version
+
+  serialize :config_vars
 end
 
 # == Schema Information
@@ -19,6 +21,7 @@ end
 #  description :string(255)      not null
 #  created_at  :datetime
 #  updated_at  :datetime
+#  config_vars :text
 #
 # Indexes
 #

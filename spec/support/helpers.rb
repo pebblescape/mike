@@ -8,11 +8,11 @@ module Helpers
   def build(*args)
     Fabricate.build(*args)
   end
-  
-  def api_header(version = '1')    
+
+  def api_header(version = '1')
     {'Accept' => "application/vnd.pebblescape+json; version=#{version}"}
   end
-  
+
   def auth_key
     user = Fabricate(:admin)
     key = Fabricate(:api_key, user: user)
@@ -28,5 +28,9 @@ module Helpers
   def log_in_user(user)
     provider = Mike.current_user_provider.new(request.env)
     provider.log_on_user(user,session,cookies)
+  end
+
+  def authenticated_request(method, action, params={})
+    send(method, action, auth_key.merge(params), api_header)
   end
 end

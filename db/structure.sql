@@ -66,7 +66,8 @@ CREATE TABLE apps (
     owner_id uuid,
     name character varying(255) NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    config_vars text
 );
 
 
@@ -100,7 +101,8 @@ CREATE TABLE releases (
     version integer NOT NULL,
     description character varying(255) NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    config_vars text
 );
 
 
@@ -321,4 +323,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141127151446');
 INSERT INTO schema_migrations (version) VALUES ('20141127152326');
 
 INSERT INTO schema_migrations (version) VALUES ('20141127152629');
+
+INSERT INTO schema_migrations (version) VALUES ('20141128131442');
 
