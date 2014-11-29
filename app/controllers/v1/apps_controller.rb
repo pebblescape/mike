@@ -22,8 +22,7 @@ class V1::AppsController < ApiController
 
   private
 
-  # TODO: whitelist this
   def app_params
-    params.require(:app).permit!
+    params.require(:app).permit(:name, :config_vars)
   end
 end

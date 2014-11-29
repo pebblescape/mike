@@ -8,6 +8,7 @@ class V1::BuildsController < ApiController
 
   def create
     build = Build.create(build_params)
+    build.app = @app
     build.user = current_user
     build.save
 
@@ -24,9 +25,8 @@ class V1::BuildsController < ApiController
 
   private
 
-  # TODO: whitelist this
   def build_params
-    params.require(:build).permit!
+    params.require(:build).permit(:status, :buildpack_description, :commit, :process_types, :size)
   end
 
   def fetch_app
