@@ -3,12 +3,12 @@ require_dependency 'mike'
 
 class User < ActiveRecord::Base
   has_one :api_key, dependent: :destroy
-  
+
   has_many :apps, foreign_key: :owner_id, dependent: :destroy
   has_many :builds, dependent: :destroy
   has_many :releases, dependent: :destroy
   has_many :ssh_keys, dependent: :destroy
-  
+
   before_validation :downcase_email
 
   validates_presence_of :name
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
     user.email = params[:email]
     user
   end
-  
+
   def self.max_password_length
     200
   end
@@ -56,11 +56,11 @@ class User < ActiveRecord::Base
   def email_hash
     User.email_hash(email)
   end
-  
+
   def downcase_email
     self.email = self.email.downcase if self.email
   end
-  
+
   def password_validator
     PasswordValidator.new(attributes: :password).validate_each(self, :password, @raw_password)
   end
@@ -92,11 +92,11 @@ class User < ActiveRecord::Base
   def revoke_api_key
     ApiKey.where(user_id: self.id).delete_all
   end
-  
+
   def password=(password)
     @raw_password = password unless password.blank?
   end
-  
+
   # Indicate that this is NOT a passwordless account for the purposes of validation
   def password_required!
     @password_required = true
@@ -105,7 +105,7 @@ class User < ActiveRecord::Base
   def password_required?
     !!@password_required
   end
-  
+
   def password
     '' # so that validator doesn't complain that a password attribute doesn't exist
   end

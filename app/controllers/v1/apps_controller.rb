@@ -15,7 +15,8 @@ class V1::AppsController < ApiController
   def show
     params.require(:id)
 
-    app = App.find(params[:id])
+    app = App.find_by_uuid_or_name(params[:id])
+    raise Mike::NotFound unless app
     # TODO: auth. app ownership check here
     render json: app
   end

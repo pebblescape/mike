@@ -38,6 +38,16 @@ describe V1::AppsController, type: :controller do
       expect(response.body).to include(app.id)
     end
 
+    it 'respond to both names and uuids' do
+      authenticated_request(:get, 'show', {id: app.id})
+      assert_response 200
+      expect(response.body).to include(app.id)
+
+      authenticated_request(:get, 'show', {id: app.name})
+      assert_response 200
+      expect(response.body).to include(app.id)
+    end
+
     it 'should not return too much owner info' do
       authenticated_request(:get, 'show', {id: app.id})
 

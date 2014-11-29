@@ -9,6 +9,14 @@ class App < ActiveRecord::Base
   validates_uniqueness_of :name
 
   serialize :config_vars
+
+  def self.find_by_uuid_or_name(query)
+    if query.length == 36
+      App.find(query)
+    else
+      App.find_by_name(query)
+    end
+  end
 end
 
 # == Schema Information

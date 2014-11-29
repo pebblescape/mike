@@ -20,15 +20,14 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Mike::NotFound do
-    rescue_mike_actions("[error: 'not found']", 404)
+    rescue_mike_actions("not_found", 404)
   end
 
   private
 
-  # TODO: standardize with json_error
-  def rescue_mike_actions(message, error, include_ember=false)
+  def rescue_mike_actions(message, error)
     if request.format && request.format.json?
-      render status: error, layout: false, text: message
+      json_error(error, message)
     else
       render text: build_not_found_page(error)
     end
