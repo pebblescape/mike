@@ -9,25 +9,27 @@ Rails.application.routes.draw do
   else
     mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
   end
-  
+
   api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.pebblescape+json; version=1"}) do
-    resources :apps
+    resources :apps do
+      resources :builds
+    end
     resources :users
-    
+
     get 'auth' => 'users#auth'
   end
-  
+
   resources :static
   get "login" => "static#show", id: "login"
-  
+
   resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy, :become] do
     collection do
       post "forgot_password"
     end
   end
-  
+
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
-  
+
   root "apps#index"
 end

@@ -1,5 +1,5 @@
 Fabricator(:app) do
-  name 'super-app'
+  name { sequence(:name) { |i| "super-app-#{i}" } }
   owner { Fabricate(:user) }
   config_vars { {'super' => 'vars'} }
 end

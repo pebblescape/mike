@@ -13,9 +13,9 @@ module Helpers
     {'Accept' => "application/vnd.pebblescape+json; version=#{version}"}
   end
 
-  def auth_key
-    user = Fabricate(:admin)
-    key = Fabricate(:api_key, user: user)
+  def auth_key(user=nil)
+    user ||= Fabricate(:admin)
+    key = user.api_key || Fabricate(:api_key, user: user)
     {'api_key' => key.key}
   end
 
@@ -30,7 +30,7 @@ module Helpers
     provider.log_on_user(user,session,cookies)
   end
 
-  def authenticated_request(method, action, params={})
-    send(method, action, auth_key.merge(params), api_header)
+  def authenticated_request(method, action, params={}, user=nil)
+    send(method, action, auth_key(user).merge(params), api_header)
   end
 end
