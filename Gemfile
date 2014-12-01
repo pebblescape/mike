@@ -46,16 +46,16 @@ group :test, :development do
   gem 'shoulda', require: false
   gem 'rspec-given'
   gem 'rspec-legacy_formatters'
-  
+
   # test assisters
   gem 'mock_redis'
   gem 'timecop'
   gem 'mocha', require: false
-  gem 'fabrication', require: false  
+  gem 'fabrication', require: false
   gem 'simplecov', require: false
   gem 'simplecov-rcov', require: false
   gem 'certified', require: false
-  
+
   # test backend
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
@@ -76,7 +76,7 @@ end
 group :development do
   gem 'web-console', '~> 2.0'
   gem 'annotate'
-  
+
   gem 'guard'
   gem 'guard-rspec'
   gem 'terminal-notifier-guard'
@@ -85,6 +85,11 @@ end
 group :production do
   gem 'rails_12factor'
 end
+
+gem 'rack-mini-profiler', require: false
+gem 'stackprof', require: false
+gem 'flamegraph', require: false
+gem 'memory_profiler', require: false
 
 gem 'brakeman', require: false
 
