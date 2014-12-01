@@ -1,4 +1,6 @@
 class ApiKey < ActiveRecord::Base
+  default_scope { order(:created_at) }
+
   belongs_to :user
   belongs_to :created_by, class_name: User
 

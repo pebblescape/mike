@@ -5,7 +5,7 @@ class V1::AppsController < ApiController
   end
 
   def create
-    app = App.create(app_params)
+    app = App.create!(app_params)
     app.owner = current_user
     app.save
 

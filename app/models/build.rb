@@ -2,6 +2,8 @@ require_dependency 'enum'
 
 # TODO: delete images etc when deleting
 class Build < ActiveRecord::Base
+  default_scope { order(:created_at) }
+
   belongs_to :app
   belongs_to :user
 

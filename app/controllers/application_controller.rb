@@ -23,6 +23,15 @@ class ApplicationController < ActionController::Base
     rescue_mike_actions("not_found", 404)
   end
 
+  def handle_unverified_request
+    # NOTE: API key is secret, having it invalidates the need for a CSRF token
+    unless is_api?
+      super
+      clear_current_user
+      json_error(403, 'bad_csrf')
+    end
+  end
+
   private
 
   def rescue_mike_actions(message, error)
@@ -56,7 +65,9 @@ class ApplicationController < ActionController::Base
     raise Mike::NotLoggedIn.new unless current_user.present?
   end
 
-  def json_error(status=403, id='invalid_access')
-    render status: status, json: { id: id, message: I18n.t("errors.#{id}")}
+  def json_error(status=403, id='invalid_access', details=nil)
+    json = { id: id, message: I18n.t("errors.#{id}")}
+    json.merge({details:details}) if details
+    render status: status, json: json
   end
 end

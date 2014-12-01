@@ -1,3 +1,3 @@
 class CurrentUserSerializer < UserSerializer
-  attributes :name, :admin?
+  attributes :admin?
 end

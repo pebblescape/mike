@@ -4,7 +4,8 @@ class AppSerializer < ApplicationSerializer
   def owner
     {
       id: object.owner.id,
-      email: object.owner.email
+      email: object.owner.email,
+      login: object.owner.login
     }
   end
 end

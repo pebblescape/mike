@@ -1,5 +1,7 @@
 # TODO: delete containers etc when deleting
 class App < ActiveRecord::Base
+  default_scope { order(:created_at) }
+
   belongs_to :owner, class_name: User
 
   has_many :builds, dependent: :destroy

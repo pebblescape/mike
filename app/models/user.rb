@@ -2,6 +2,8 @@ require_dependency 'pbkdf2'
 require_dependency 'mike'
 
 class User < ActiveRecord::Base
+  default_scope { order(:created_at) }
+
   has_one :api_key, dependent: :destroy
 
   has_many :apps, foreign_key: :owner_id, dependent: :destroy

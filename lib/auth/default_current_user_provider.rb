@@ -77,7 +77,7 @@ class Auth::DefaultCurrentUserProvider
       elsif api_login
         User.find_by(login: api_login.downcase)
       else
-        nil
+        Mike.system_user
       end
     end
   end

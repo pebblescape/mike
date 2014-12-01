@@ -7,7 +7,7 @@ class V1::BuildsController < ApiController
   end
 
   def create
-    build = Build.create(build_params)
+    build = Build.create!(build_params)
     build.app = @app
     build.user = current_user
     build.save
@@ -23,10 +23,22 @@ class V1::BuildsController < ApiController
     render json: build
   end
 
+  def update
+    build = Build.find(params[:id])
+    p build_params
+    if build.update(build_params)
+      render json: build
+    else
+      json_error(422, 'failed_update', build.errors)
+    end
+  end
+
   private
 
   def build_params
-    params.require(:build).permit(:status, :buildpack_description, :commit, :process_types, :size)
+    params.require(:build).permit(:status, :buildpack_description, :commit, :process_types, :size).tap do |whitelisted|
+      whitelisted[:process_types] = params[:build][:process_types].to_h if params[:build][:process_types]
+    end
   end
 
   def fetch_app

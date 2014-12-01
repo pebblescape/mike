@@ -1,4 +1,6 @@
 class Release < ActiveRecord::Base
+  default_scope { order(:created_at) }
+
   belongs_to :app
   belongs_to :build
   belongs_to :user
