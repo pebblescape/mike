@@ -11,9 +11,10 @@ class User < ActiveRecord::Base
 
   before_validation :downcase_email
 
-  validates_presence_of :name
+  validates :login, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
   validate :password_validator
+  validates_format_of :login, with: /\A\w+\z/ # only alphanumeric, no spaces
 
   before_save :ensure_password_is_hashed
 
@@ -21,7 +22,7 @@ class User < ActiveRecord::Base
 
   def self.new_from_params(params)
     user = User.new
-    user.name = params[:name]
+    user.login = params[:login]
     user.email = params[:email]
     user
   end
@@ -129,7 +130,7 @@ end
 # Table name: users
 #
 #  id            :uuid             not null, primary key
-#  name          :string(255)
+#  login         :string(255)      not null
 #  email         :string(255)      not null
 #  password_hash :string(64)
 #  salt          :string(32)
@@ -143,4 +144,5 @@ end
 #
 #  index_users_on_auth_token  (auth_token)
 #  index_users_on_email       (email) UNIQUE
+#  index_users_on_login       (login) UNIQUE
 #

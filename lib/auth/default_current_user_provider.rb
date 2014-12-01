@@ -71,11 +71,11 @@ class Auth::DefaultCurrentUserProvider
   def lookup_api_user(api_key_value, request)
     api_key = ApiKey.where(key: api_key_value).includes(:user).first
     if api_key
-      api_email = request["api_email"]
+      api_login = request["api_login"]
       if api_key.user
-        api_key.user if !api_email || (api_key.user.email == api_email.downcase)
-      elsif api_email
-        User.find_by(email: api_email.downcase)
+        api_key.user if !api_login || (api_key.user.login == api_login.downcase)
+      elsif api_login
+        User.find_by(login: api_login.downcase)
       else
         nil
       end

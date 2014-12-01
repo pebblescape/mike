@@ -135,7 +135,7 @@ CREATE TABLE ssh_keys (
 
 CREATE TABLE users (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    name character varying(255),
+    login character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     password_hash character varying(64),
     salt character varying(32),
@@ -294,6 +294,13 @@ CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
 
 
 --
+-- Name: index_users_on_login; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_login ON users USING btree (login);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -327,4 +334,8 @@ INSERT INTO schema_migrations (version) VALUES ('20141127152629');
 INSERT INTO schema_migrations (version) VALUES ('20141128131442');
 
 INSERT INTO schema_migrations (version) VALUES ('20141129163050');
+
+INSERT INTO schema_migrations (version) VALUES ('20141201120409');
+
+INSERT INTO schema_migrations (version) VALUES ('20141201121429');
 
