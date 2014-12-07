@@ -25,7 +25,7 @@ class V1::BuildsController < ApiController
 
   def update
     build = Build.find(params[:id])
-    p build_params
+
     if build.update(build_params)
       render json: build
     else
@@ -37,7 +37,7 @@ class V1::BuildsController < ApiController
 
   def build_params
     params.require(:build).permit(:status, :buildpack_description, :commit, :process_types, :size).tap do |whitelisted|
-      whitelisted[:process_types] = params[:build][:process_types].to_h if params[:build][:process_types]
+      whitelisted[:process_types] = params[:build][:process_types].to_a if params[:build][:process_types]
     end
   end
 
