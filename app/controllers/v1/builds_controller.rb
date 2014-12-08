@@ -7,12 +7,13 @@ class V1::BuildsController < ApiController
   end
 
   def create
-    build = Build.create!(build_params)
-    build.app = @app
-    build.user = current_user
-    build.save
+    params.require(:cid)
+
+    build = Build.from_push(build_params, params[:cid], @app, current_user)
 
     render json: build
+  rescue Mike::BuildError => e
+    json_error(422, 'failed_build', e.message)
   end
 
   def show
@@ -36,9 +37,7 @@ class V1::BuildsController < ApiController
   private
 
   def build_params
-    params.require(:build).permit(:status, :buildpack_description, :commit, :process_types, :size).tap do |whitelisted|
-      whitelisted[:process_types] = params[:build][:process_types].to_a if params[:build][:process_types]
-    end
+    params.require(:build).permit(:commit)
   end
 
   def fetch_app

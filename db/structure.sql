@@ -82,8 +82,8 @@ CREATE TABLE builds (
     status integer NOT NULL,
     buildpack_description character varying(255),
     commit character varying(255),
-    process_types text NOT NULL,
-    size integer NOT NULL,
+    process_types text,
+    size integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -338,4 +338,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141129163050');
 INSERT INTO schema_migrations (version) VALUES ('20141201120409');
 
 INSERT INTO schema_migrations (version) VALUES ('20141201121429');
+
+INSERT INTO schema_migrations (version) VALUES ('20141208201407');
 

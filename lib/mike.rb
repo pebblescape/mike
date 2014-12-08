@@ -3,19 +3,21 @@ require_dependency 'auth/default_current_user_provider'
 module Mike
   # When they don't have permission to do something
   class InvalidAccess < Exception; end
-  
+
   # When they try to do something they should be logged in for
   class NotLoggedIn < Exception; end
-  
+
   # Page not found
   class NotFound < Exception; end
-  
+
+  class BuildError < Exception; end
+
   SYSTEM_USER_ID = "10b32814-f3d1-4cad-b701-50e06ae50e73" unless defined? SYSTEM_USER_ID
 
   def self.system_user
     User.find_by(id: SYSTEM_USER_ID)
   end
-  
+
   def self.git_version
     return $git_version if $git_version
 
@@ -25,7 +27,7 @@ module Mike
       $git_version = "unknown"
     end
   end
-  
+
   def self.current_user_provider
     @current_user_provider || Auth::DefaultCurrentUserProvider
   end

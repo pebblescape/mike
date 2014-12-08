@@ -10,13 +10,45 @@ class Build < ActiveRecord::Base
   has_many :releases
 
   validates_presence_of :status
-  validates_presence_of :process_types
-  validates_presence_of :size
+  # validates_presence_of :process_types
+  # validates_presence_of :size
 
   serialize :process_types
 
   def self.status_types
     @status_types ||= Enum.new(:pending, :failed, :succeeded)
+  end
+
+  def self.from_push(params, cid, app, user)
+    container = Docker::Container.get(cid)
+    unless container.info["State"]["ExitCode"] == 0
+      raise Mike::BuildError, "Build failed in container #{cid}"
+    end
+
+    defaults = {
+      status: status_types[:pending],
+      app: app,
+      user: user
+    }
+    build = create!(params.merge(defaults))
+
+    image = container.commit
+    image.tag(repo: "pebble/#{app.name}", tag: build.id)
+    image.tag(repo: "pebble/#{app.name}")
+    container.remove
+
+    infocnt = Docker::Container.create('Cmd' => ['info'], 'Image' => image.id)
+    info = infocnt.tap(&:start).attach
+    infocnt.remove
+
+    parsed = JSON.parse(info[0][0])
+    build.process_types = parsed['process_types']
+    build.size = parsed['app_size']
+    build.buildpack_description = parsed['buildpack_name']
+    build.status = status_types[:succeeded]
+    build.save
+
+    build
   end
 end
 
@@ -30,8 +62,8 @@ end
 #  status                :integer          not null
 #  buildpack_description :string(255)
 #  commit                :string(255)
-#  process_types         :text             not null
-#  size                  :integer          not null
+#  process_types         :text
+#  size                  :integer
 #  created_at            :datetime
 #  updated_at            :datetime
 #

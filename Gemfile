@@ -91,8 +91,6 @@ gem 'stackprof', require: false
 gem 'flamegraph', require: false
 gem 'memory_profiler', require: false
 
-gem 'brakeman', require: false
-
 # SERVERS
 gem 'thin', require: false
 gem 'puma', require: false
