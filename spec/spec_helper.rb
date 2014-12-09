@@ -1,14 +1,14 @@
 if ENV['CI']
   require 'simplecov'
   require 'simplecov-rcov'
-  
+
   class SimpleCov::Formatter::MergedFormatter
     def format(result)
       SimpleCov::Formatter::HTMLFormatter.new.format(result)
       SimpleCov::Formatter::RcovFormatter.new.format(result)
     end
   end
-  
+
   SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
   SimpleCov.start 'rails'
 end
@@ -16,7 +16,6 @@ end
 require 'rubygems'
 
 require 'fabrication'
-require 'mocha/api'
 require 'certified'
 require 'fakeweb'
 FakeWeb.allow_net_connect = false
@@ -33,7 +32,7 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
   config.include Helpers
-  config.mock_framework = :mocha
+  config.mock_framework = :rspec
   config.order = 'random'
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
@@ -45,7 +44,7 @@ RSpec.configure do |config|
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
-  
+
   config.before(:suite) do
     # Sidekiq.error_handlers.clear
 

@@ -50,7 +50,6 @@ group :test, :development do
   # test assisters
   gem 'mock_redis'
   gem 'timecop'
-  gem 'mocha', require: false
   gem 'fabrication', require: false
   gem 'simplecov', require: false
   gem 'simplecov-rcov', require: false
