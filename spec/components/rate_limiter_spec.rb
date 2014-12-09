@@ -7,7 +7,7 @@ describe RateLimiter do
 
   context 'disabled' do
     before do
-      RateLimiter.stubs(:disabled?).returns(true)
+      expect(RateLimiter).to receive(:disabled?).at_least(:once).and_return(true)
       rate_limiter.performed!
       rate_limiter.performed!
     end
@@ -23,7 +23,7 @@ describe RateLimiter do
 
   context 'enabled' do
     before do
-      RateLimiter.stubs(:disabled?).returns(false)
+      expect(RateLimiter).to receive(:disabled?).at_least(:once).and_return(false)
       rate_limiter.clear!
     end
 
