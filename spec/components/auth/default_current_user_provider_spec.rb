@@ -27,14 +27,14 @@ describe Auth::DefaultCurrentUserProvider do
     ApiKey.create!(key: "hello", user_id: user.id, created_by_id: Mike::SYSTEM_USER_ID)
 
     expect{
-      provider("/?api_key=hello&api_login=#{user2.login}").current_user
+      provider("/?api_key=hello&api_login=#{user2.email}").current_user
     }.to raise_error(Mike::InvalidAccess)
   end
 
   it "finds a user for a correct system api key" do
     user = Fabricate(:user)
     ApiKey.create!(key: "hello", created_by_id: Mike::SYSTEM_USER_ID)
-    expect(provider("/?api_key=hello&api_login=#{user.login}").current_user.id).to eq user.id
+    expect(provider("/?api_key=hello&api_login=#{user.email}").current_user.id).to eq user.id
   end
 end
 

@@ -11,12 +11,21 @@ class App < ActiveRecord::Base
   validates_uniqueness_of :name
 
   serialize :config_vars
+  serialize :formation
+
+  before_create :set_formation
 
   def self.find_by_uuid_or_name(query)
     if query.length == 36
       App.find(query)
     else
       App.find_by_name(query)
+    end
+  end
+
+  def set_formation
+    unless self.formation
+      self.formation = {web: 1}
     end
   end
 end
@@ -31,6 +40,7 @@ end
 #  created_at  :datetime
 #  updated_at  :datetime
 #  config_vars :text
+#  formation   :text
 #
 # Indexes
 #

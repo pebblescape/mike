@@ -73,9 +73,9 @@ class Auth::DefaultCurrentUserProvider
     if api_key
       api_login = request["api_login"]
       if api_key.user
-        api_key.user if !api_login || (api_key.user.login == api_login.downcase)
+        api_key.user if !api_login || (api_key.user.email == api_login.downcase)
       elsif api_login
-        User.find_by(login: api_login.downcase)
+        User.find_by(email: api_login.downcase)
       else
         Mike.system_user
       end

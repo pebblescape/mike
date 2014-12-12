@@ -5,7 +5,7 @@ class AppSerializer < ApplicationSerializer
     {
       id: object.owner.id,
       email: object.owner.email,
-      login: object.owner.login
+      name: object.owner.name
     }
   end
 end

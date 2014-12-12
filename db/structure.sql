@@ -67,7 +67,8 @@ CREATE TABLE apps (
     name character varying(255) NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    config_vars text
+    config_vars text,
+    formation text
 );
 
 
@@ -85,6 +86,28 @@ CREATE TABLE builds (
     process_types text,
     size integer,
     created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    image_id character varying(255)
+);
+
+
+--
+-- Name: proc_instances; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE proc_instances (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    user_id uuid,
+    app_id uuid,
+    build_id uuid,
+    release_id uuid,
+    type character varying(255) NOT NULL,
+    port integer,
+    number integer,
+    container_id character varying(255),
+    ip_address inet,
+    started_at timestamp without time zone,
+    created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
 
@@ -98,7 +121,6 @@ CREATE TABLE releases (
     user_id uuid,
     app_id uuid,
     build_id uuid,
-    version integer NOT NULL,
     description character varying(255) NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -135,7 +157,7 @@ CREATE TABLE ssh_keys (
 
 CREATE TABLE users (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    login character varying(255) NOT NULL,
+    name character varying(255),
     email character varying(255) NOT NULL,
     password_hash character varying(64),
     salt character varying(32),
@@ -169,6 +191,14 @@ ALTER TABLE ONLY apps
 
 ALTER TABLE ONLY builds
     ADD CONSTRAINT builds_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: instances_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY proc_instances
+    ADD CONSTRAINT instances_pkey PRIMARY KEY (id);
 
 
 --
@@ -238,6 +268,34 @@ CREATE INDEX index_builds_on_user_id ON builds USING btree (user_id);
 
 
 --
+-- Name: index_proc_instances_on_app_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_proc_instances_on_app_id ON proc_instances USING btree (app_id);
+
+
+--
+-- Name: index_proc_instances_on_build_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_proc_instances_on_build_id ON proc_instances USING btree (build_id);
+
+
+--
+-- Name: index_proc_instances_on_release_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_proc_instances_on_release_id ON proc_instances USING btree (release_id);
+
+
+--
+-- Name: index_proc_instances_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_proc_instances_on_user_id ON proc_instances USING btree (user_id);
+
+
+--
 -- Name: index_releases_on_app_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -294,10 +352,10 @@ CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
 
 
 --
--- Name: index_users_on_login; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_users_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_users_on_login ON users USING btree (login);
+CREATE UNIQUE INDEX index_users_on_name ON users USING btree (name);
 
 
 --
@@ -340,4 +398,16 @@ INSERT INTO schema_migrations (version) VALUES ('20141201120409');
 INSERT INTO schema_migrations (version) VALUES ('20141201121429');
 
 INSERT INTO schema_migrations (version) VALUES ('20141208201407');
+
+INSERT INTO schema_migrations (version) VALUES ('20141211192529');
+
+INSERT INTO schema_migrations (version) VALUES ('20141211200951');
+
+INSERT INTO schema_migrations (version) VALUES ('20141211201425');
+
+INSERT INTO schema_migrations (version) VALUES ('20141211202051');
+
+INSERT INTO schema_migrations (version) VALUES ('20141212213058');
+
+INSERT INTO schema_migrations (version) VALUES ('20141212220551');
 

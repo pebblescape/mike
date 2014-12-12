@@ -6,9 +6,23 @@ class Release < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :description
-  validates_presence_of :version
 
   serialize :config_vars
+
+  def self.from_push(build, app, user)
+    attrs = {
+      app: app,
+      user: user,
+      build: build,
+      config_vars: app.config_vars,
+      description: "Deployed #{build.short_commit}"
+    }
+    create!(attrs)
+  end
+
+  def version
+    app.releases.index(self) + 1
+  end
 end
 
 # == Schema Information
@@ -19,7 +33,6 @@ end
 #  user_id     :uuid
 #  app_id      :uuid
 #  build_id    :uuid
-#  version     :integer          not null
 #  description :string(255)      not null
 #  created_at  :datetime
 #  updated_at  :datetime

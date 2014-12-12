@@ -30,25 +30,33 @@ class Build < ActiveRecord::Base
       app: app,
       user: user
     }
-    build = create!(params.merge(defaults))
 
-    image = container.commit
-    image.tag(repo: "pebble/#{app.name}", tag: build.id)
-    image.tag(repo: "pebble/#{app.name}")
-    container.remove
+    create!(params.merge(defaults)).tap do |build|
+      image = container.commit
+      image.tag(repo: "pebble/#{app.name}", tag: build.id)
+      image.tag(repo: "pebble/#{app.name}")
+      container.remove
 
-    infocnt = Docker::Container.create('Cmd' => ['info'], 'Image' => image.id)
-    info = infocnt.tap(&:start).attach
-    infocnt.remove
+      infocnt = Docker::Container.create('Cmd' => ['info'], 'Image' => image.id)
+      info = infocnt.tap(&:start).attach
+      infocnt.remove
 
-    parsed = JSON.parse(info[0][0])
-    build.process_types = parsed['process_types']
-    build.size = parsed['app_size']
-    build.buildpack_description = parsed['buildpack_name']
-    build.status = status_types[:succeeded]
-    build.save
+      parsed = JSON.parse(info[0][0])
+      build.process_types = parsed['process_types']
+      build.size = parsed['app_size']
+      build.buildpack_description = parsed['buildpack_name']
+      build.status = status_types[:succeeded]
+      build.image_id = image.id
+      build.save
+    end
+  end
 
-    build
+  def image
+    Docker::Image.get(self.image_id)
+  end
+
+  def short_commit
+    commit[0..6]
   end
 end
 
@@ -66,6 +74,7 @@ end
 #  size                  :integer
 #  created_at            :datetime
 #  updated_at            :datetime
+#  image_id              :string(255)
 #
 # Indexes
 #

@@ -7,13 +7,12 @@ class V1::BuildsController < ApiController
   end
 
   def create
-    params.require(:cid)
-
-    build = Build.from_push(build_params, params[:cid], @app, current_user)
+    build = Build.create!(build_params)
+    build.user = current_user
+    build.app = @app
+    build.save
 
     render json: build
-  rescue Mike::BuildError => e
-    json_error(422, 'failed_build', e.message)
   end
 
   def show
@@ -37,7 +36,7 @@ class V1::BuildsController < ApiController
   private
 
   def build_params
-    params.require(:build).permit(:commit)
+    params.require(:build).permit(:status, :commit)
   end
 
   def fetch_app

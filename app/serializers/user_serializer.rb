@@ -1,3 +1,3 @@
 class UserSerializer < ApplicationSerializer
-  attributes :id, :login, :email, :active
+  attributes :id, :name, :email, :active
 end

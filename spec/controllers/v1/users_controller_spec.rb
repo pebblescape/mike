@@ -7,13 +7,13 @@ describe V1::UsersController, type: :controller do
     it "should return user info by key" do
       authenticated_request :get, 'auth', { key: user.ssh_keys.first.key }
       assert_response 200
-      expect(response.body).to include(user.login)
+      expect(response.body).to include(user.name)
     end
 
     it "should return user info by fingerprint" do
       authenticated_request :get, 'auth', { fingerprint: user.ssh_keys.first.fingerprint }
       assert_response 200
-      expect(response.body).to include(user.login)
+      expect(response.body).to include(user.name)
     end
 
     it "should return 404 on invalid key" do
