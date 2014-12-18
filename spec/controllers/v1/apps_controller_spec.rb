@@ -66,16 +66,18 @@ describe V1::AppsController, type: :controller do
       container = double(Docker::Container)
       image = double(Docker::Image)
       expect(container).to receive(:info).and_return({"State" => {"ExitCode" => 0}})
+      expect(container).to receive(:json).and_return({"State" => {"ExitCode" => 0}, "NetworkSettings" => {"IPAddress" => "127.0.0.1"}})
       expect(container).to receive(:commit).and_return(image)
       expect(container).to receive(:remove).twice
-      expect(container).to receive(:start)
+      expect(container).to receive(:start).twice.and_return(container)
+      expect(container).to receive(:id).and_return(SecureRandom.hex)
       expect(container).to receive(:attach).and_return([[JSON.dump(fakeinfo)], []])
 
       expect(image).to receive(:tag).twice
       expect(image).to receive(:id).twice.and_return(SecureRandom.hex)
 
       expect(Docker::Container).to receive(:get).and_return(container)
-      expect(Docker::Container).to receive(:create).and_return(container)
+      expect(Docker::Container).to receive(:create).twice.and_return(container)
 
       authenticated_request(:post, 'push', {app_id: app.id, cid: 'bogus', build: { commit: build['commit'], status: build[:status] }}, user)
 
