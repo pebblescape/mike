@@ -13,8 +13,6 @@ class Build < ActiveRecord::Base
   # validates_presence_of :process_types
   # validates_presence_of :size
 
-  serialize :process_types
-
   def self.status_types
     @status_types ||= Enum.new(:pending, :failed, :succeeded)
   end
@@ -70,7 +68,7 @@ end
 #  status                :integer          not null
 #  buildpack_description :string(255)
 #  commit                :string(255)
-#  process_types         :text
+#  process_types         :hstore           default({})
 #  size                  :integer
 #  created_at            :datetime
 #  updated_at            :datetime

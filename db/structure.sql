@@ -24,6 +24,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -67,8 +81,8 @@ CREATE TABLE apps (
     name character varying(255) NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    config_vars text,
-    formation text
+    config_vars hstore DEFAULT ''::hstore,
+    formation hstore DEFAULT '"web"=>"1"'::hstore
 );
 
 
@@ -83,7 +97,7 @@ CREATE TABLE builds (
     status integer NOT NULL,
     buildpack_description character varying(255),
     commit character varying(255),
-    process_types text,
+    process_types hstore DEFAULT ''::hstore,
     size integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -124,7 +138,7 @@ CREATE TABLE releases (
     description character varying(255) NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    config_vars text
+    config_vars hstore DEFAULT ''::hstore
 );
 
 
@@ -371,7 +385,9 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 SET search_path TO "$user",public;
 
-INSERT INTO schema_migrations (version) VALUES ('1');
+INSERT INTO schema_migrations (version) VALUES ('11');
+
+INSERT INTO schema_migrations (version) VALUES ('12');
 
 INSERT INTO schema_migrations (version) VALUES ('20140807103256');
 
@@ -410,4 +426,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141211202051');
 INSERT INTO schema_migrations (version) VALUES ('20141212213058');
 
 INSERT INTO schema_migrations (version) VALUES ('20141212220551');
+
+INSERT INTO schema_migrations (version) VALUES ('20141218190305');
 

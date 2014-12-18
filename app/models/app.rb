@@ -10,9 +10,6 @@ class App < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  serialize :config_vars
-  serialize :formation
-
   before_create :set_formation
 
   def self.find_by_uuid_or_name(query)
@@ -39,8 +36,8 @@ end
 #  name        :string(255)      not null
 #  created_at  :datetime
 #  updated_at  :datetime
-#  config_vars :text
-#  formation   :text
+#  config_vars :hstore           default({})
+#  formation   :hstore           default({"web"=>"1"})
 #
 # Indexes
 #

@@ -7,8 +7,6 @@ class Release < ActiveRecord::Base
 
   validates_presence_of :description
 
-  serialize :config_vars
-
   def self.from_push(build, app, user)
     attrs = {
       app: app,
@@ -36,7 +34,7 @@ end
 #  description :string(255)      not null
 #  created_at  :datetime
 #  updated_at  :datetime
-#  config_vars :text
+#  config_vars :hstore           default({})
 #
 # Indexes
 #
