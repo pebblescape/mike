@@ -3,6 +3,7 @@ class Release < ActiveRecord::Base
 
   belongs_to :app
   belongs_to :build
+  belongs_to :user
 
   has_many :dynos
 

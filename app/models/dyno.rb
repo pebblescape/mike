@@ -11,9 +11,7 @@ end
 # Table name: dynos
 #
 #  id           :uuid             not null, primary key
-#  user_id      :uuid
 #  app_id       :uuid
-#  build_id     :uuid
 #  release_id   :uuid
 #  type         :string(255)      not null
 #  port         :integer
@@ -27,7 +25,5 @@ end
 # Indexes
 #
 #  index_dynos_on_app_id      (app_id)
-#  index_dynos_on_build_id    (build_id)
 #  index_dynos_on_release_id  (release_id)
-#  index_dynos_on_user_id     (user_id)
 #

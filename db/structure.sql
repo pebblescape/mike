@@ -111,9 +111,7 @@ CREATE TABLE builds (
 
 CREATE TABLE dynos (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    user_id uuid,
     app_id uuid,
-    build_id uuid,
     release_id uuid,
     type character varying(255) NOT NULL,
     port integer,
@@ -289,24 +287,10 @@ CREATE INDEX index_dynos_on_app_id ON dynos USING btree (app_id);
 
 
 --
--- Name: index_dynos_on_build_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_dynos_on_build_id ON dynos USING btree (build_id);
-
-
---
 -- Name: index_dynos_on_release_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_dynos_on_release_id ON dynos USING btree (release_id);
-
-
---
--- Name: index_dynos_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_dynos_on_user_id ON dynos USING btree (user_id);
 
 
 --
@@ -432,4 +416,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141212220551');
 INSERT INTO schema_migrations (version) VALUES ('20141218190305');
 
 INSERT INTO schema_migrations (version) VALUES ('20141218193836');
+
+INSERT INTO schema_migrations (version) VALUES ('20141218194753');
 
