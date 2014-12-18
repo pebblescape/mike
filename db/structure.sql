@@ -106,10 +106,10 @@ CREATE TABLE builds (
 
 
 --
--- Name: proc_instances; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: dynos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE proc_instances (
+CREATE TABLE dynos (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     user_id uuid,
     app_id uuid,
@@ -211,7 +211,7 @@ ALTER TABLE ONLY builds
 -- Name: instances_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY proc_instances
+ALTER TABLE ONLY dynos
     ADD CONSTRAINT instances_pkey PRIMARY KEY (id);
 
 
@@ -282,31 +282,31 @@ CREATE INDEX index_builds_on_user_id ON builds USING btree (user_id);
 
 
 --
--- Name: index_proc_instances_on_app_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_dynos_on_app_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_proc_instances_on_app_id ON proc_instances USING btree (app_id);
-
-
---
--- Name: index_proc_instances_on_build_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_proc_instances_on_build_id ON proc_instances USING btree (build_id);
+CREATE INDEX index_dynos_on_app_id ON dynos USING btree (app_id);
 
 
 --
--- Name: index_proc_instances_on_release_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_dynos_on_build_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_proc_instances_on_release_id ON proc_instances USING btree (release_id);
+CREATE INDEX index_dynos_on_build_id ON dynos USING btree (build_id);
 
 
 --
--- Name: index_proc_instances_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_dynos_on_release_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_proc_instances_on_user_id ON proc_instances USING btree (user_id);
+CREATE INDEX index_dynos_on_release_id ON dynos USING btree (release_id);
+
+
+--
+-- Name: index_dynos_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_dynos_on_user_id ON dynos USING btree (user_id);
 
 
 --
@@ -385,6 +385,8 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 SET search_path TO "$user",public;
 
+INSERT INTO schema_migrations (version) VALUES ('1');
+
 INSERT INTO schema_migrations (version) VALUES ('11');
 
 INSERT INTO schema_migrations (version) VALUES ('12');
@@ -428,4 +430,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141212213058');
 INSERT INTO schema_migrations (version) VALUES ('20141212220551');
 
 INSERT INTO schema_migrations (version) VALUES ('20141218190305');
+
+INSERT INTO schema_migrations (version) VALUES ('20141218193836');
 

@@ -6,6 +6,7 @@ class App < ActiveRecord::Base
 
   has_many :builds, dependent: :destroy
   has_many :releases, dependent: :destroy
+  has_many :dynos, dependent: :destroy
 
   validates_presence_of :name
   validates_uniqueness_of :name

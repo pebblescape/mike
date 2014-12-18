@@ -18,6 +18,7 @@ class V1::AppsController < ApiController
     app = App.find_by_uuid_or_name(params[:app_id])
     build = Build.from_push(push_params, params[:cid], app, current_user)
     release = Release.from_push(build, app, current_user)
+    release.deploy!
 
     render json: release, serializer: PushSerializer
   rescue Mike::BuildError => e

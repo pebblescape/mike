@@ -1,16 +1,14 @@
-class ProcInstance < ActiveRecord::Base
+class Dyno < ActiveRecord::Base
   default_scope { order(:created_at) }
 
   belongs_to :app
-  belongs_to :build
-  belongs_to :user
   belongs_to :release
 
 end
 
 # == Schema Information
 #
-# Table name: proc_instances
+# Table name: dynos
 #
 #  id           :uuid             not null, primary key
 #  user_id      :uuid
@@ -28,8 +26,8 @@ end
 #
 # Indexes
 #
-#  index_proc_instances_on_app_id      (app_id)
-#  index_proc_instances_on_build_id    (build_id)
-#  index_proc_instances_on_release_id  (release_id)
-#  index_proc_instances_on_user_id     (user_id)
+#  index_dynos_on_app_id      (app_id)
+#  index_dynos_on_build_id    (build_id)
+#  index_dynos_on_release_id  (release_id)
+#  index_dynos_on_user_id     (user_id)
 #

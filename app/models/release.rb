@@ -3,7 +3,8 @@ class Release < ActiveRecord::Base
 
   belongs_to :app
   belongs_to :build
-  belongs_to :user
+
+  has_many :dynos
 
   validates_presence_of :description
 
@@ -20,6 +21,17 @@ class Release < ActiveRecord::Base
 
   def version
     app.releases.index(self) + 1
+  end
+
+  def deploy!
+    app.dynos.destroy_all
+    app.current_release = self
+
+    app.formation.each do |type, count|
+      count.times do |i|
+        proc = self.dynos.create(type: type, number: i)
+      end
+    end
   end
 end
 
