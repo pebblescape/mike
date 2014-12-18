@@ -26,11 +26,10 @@ class Release < ActiveRecord::Base
 
   def deploy!
     app.dynos.destroy_all
-    app.current_release = self
 
     app.formation.each do |type, count|
-      count.times do |i|
-        proc = self.dynos.create(type: type, number: i)
+      count.to_i.times do |i|
+        proc = self.dynos.create(app: app, proctype: type, number: i)
       end
     end
   end

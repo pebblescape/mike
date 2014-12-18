@@ -113,7 +113,7 @@ CREATE TABLE dynos (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     app_id uuid,
     release_id uuid,
-    type character varying(255) NOT NULL,
+    proctype character varying(255) NOT NULL,
     port integer,
     number integer,
     container_id character varying(255),
@@ -418,4 +418,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141218190305');
 INSERT INTO schema_migrations (version) VALUES ('20141218193836');
 
 INSERT INTO schema_migrations (version) VALUES ('20141218194753');
+
+INSERT INTO schema_migrations (version) VALUES ('20141218200105');
 

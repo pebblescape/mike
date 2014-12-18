@@ -4,6 +4,97 @@ class Dyno < ActiveRecord::Base
   belongs_to :app
   belongs_to :release
 
+  before_create do |dyno|
+    dyno.started_at = Time.now
+  end
+
+  before_create do |dyno|
+    dyno.port = 5000
+    dyno.spawn
+
+    # update Hipache with the new gear IP/ports (only add web gears)
+    return unless dyno.proctype == "web"
+    # $redis.rpush("frontend:#{app.url}", url)
+  end
+
+  before_destroy do |gear|
+    # remove web gears from Hipache
+    return unless gear.proctype == "web"
+    # $redis.lrem("frontend:#{app.url}", 1, url)
+  end
+
+  before_destroy do
+    begin
+      stop && remove
+    rescue
+      Docker::Error::NotFoundError
+    end
+  end
+
+  def name
+    "#{proctype}.#{number}"
+  end
+
+  def uptime
+    started_at ? Time.now - started_at : 0
+  end
+
+  def url
+    "http://#{ip_address}:#{port}"
+  end
+
+  def spawn
+    container = Docker::Container.create(
+      'Image' => release.build.image_id,
+      'Cmd'   => ["start", proctype],
+      'Env'   => release.config_vars.map { |k,v| "#{k}=#{v}" }.concat(["PORT=#{port}", "DATABASE_URL=sqlite3:///app/db/test.sqlite"])
+    ).start
+
+    self.container_id = container.id
+    self.ip_address = container.json["NetworkSettings"]["IPAddress"]
+
+    save! if !new_record?
+  end
+
+  def kill
+    clear_started_at
+    container.kill
+  end
+
+  def start
+    container.start
+    reset_started_at
+  end
+
+  def stop
+    clear_started_at
+    container.stop
+  end
+
+  def restart
+    container.restart
+    reset_started_at
+  end
+
+  def remove
+    clear_started_at
+    container.delete
+  end
+
+  private
+
+  def reset_started_at
+    update(started_at: Time.now)
+  end
+
+  def clear_started_at
+    update(started_at: nil)
+  end
+
+  def container
+    Docker::Container.get(container_id)
+  end
+
 end
 
 # == Schema Information
@@ -13,7 +104,7 @@ end
 #  id           :uuid             not null, primary key
 #  app_id       :uuid
 #  release_id   :uuid
-#  type         :string(255)      not null
+#  proctype     :string(255)      not null
 #  port         :integer
 #  number       :integer
 #  container_id :string(255)

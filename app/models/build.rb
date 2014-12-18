@@ -40,7 +40,7 @@ class Build < ActiveRecord::Base
       infocnt.remove
 
       parsed = JSON.parse(info[0][0])
-      build.process_types = parsed['process_types']
+      build.process_types = parsed['process_types'].inject(&:merge)
       build.size = parsed['app_size']
       build.buildpack_description = parsed['buildpack_name']
       build.status = status_types[:succeeded]
