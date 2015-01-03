@@ -369,8 +369,6 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 SET search_path TO "$user",public;
 
-INSERT INTO schema_migrations (version) VALUES ('1');
-
 INSERT INTO schema_migrations (version) VALUES ('11');
 
 INSERT INTO schema_migrations (version) VALUES ('12');
@@ -392,8 +390,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141127152326');
 INSERT INTO schema_migrations (version) VALUES ('20141127152629');
 
 INSERT INTO schema_migrations (version) VALUES ('20141128131442');
-
-INSERT INTO schema_migrations (version) VALUES ('20141129163050');
 
 INSERT INTO schema_migrations (version) VALUES ('20141201120409');
 

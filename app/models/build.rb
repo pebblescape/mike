@@ -13,6 +13,14 @@ class Build < ActiveRecord::Base
   # validates_presence_of :process_types
   # validates_presence_of :size
 
+  before_destroy do
+    begin
+      remove
+    rescue
+      Docker::Error::NotFoundError
+    end
+  end
+
   def self.status_types
     @status_types ||= Enum.new(:pending, :failed, :succeeded)
   end
@@ -55,6 +63,10 @@ class Build < ActiveRecord::Base
 
   def short_commit
     commit[0..6]
+  end
+
+  def remove
+    image.remove(force: true)
   end
 end
 
