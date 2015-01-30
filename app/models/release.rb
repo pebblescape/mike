@@ -32,6 +32,8 @@ class Release < ActiveRecord::Base
         proc = self.dynos.create(app: app, proctype: type, number: i)
       end
     end
+
+    app.sync_router
   end
 end
 

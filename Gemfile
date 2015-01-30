@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.1.4'
+ruby '2.2.0'
 
-gem 'rails', '4.1.8'
+gem 'rails', '4.1.9'
 gem 'pg'
 gem 'hiredis'
 gem 'redis', require: ['redis', 'redis/connection/hiredis']
@@ -33,6 +33,7 @@ gem 'fast_xor'
 gem 'lru_redux'
 gem 'docker-api'
 gem 'highline'
+gem 'etcd'
 
 
 # DEV & TEST
@@ -73,7 +74,9 @@ end
 
 # DEV
 group :development do
-  gem 'web-console', '~> 2.0'
+  gem 'binding_of_caller'
+  gem 'better_errors'
+
   gem 'annotate'
 
   gem 'guard'

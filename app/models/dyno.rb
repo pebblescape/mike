@@ -14,13 +14,13 @@ class Dyno < ActiveRecord::Base
 
     # update Hipache with the new gear IP/ports (only add web gears)
     return unless dyno.proctype == "web"
-    # $redis.rpush("frontend:#{app.url}", url)
+    Router.add_dyno(self)
   end
 
   before_destroy do |gear|
     # remove web gears from Hipache
     return unless gear.proctype == "web"
-    # $redis.lrem("frontend:#{app.url}", 1, url)
+    Router.remove_dyno(self)
   end
 
   before_destroy do

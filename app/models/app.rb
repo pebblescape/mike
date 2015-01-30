@@ -21,10 +21,18 @@ class App < ActiveRecord::Base
     end
   end
 
+  def hostname
+    "#{name}.pebblesinspace.com"
+  end
+
   def set_formation
     unless self.formation
       self.formation = {web: 1}
     end
+  end
+
+  def sync_router
+    Router.sync_app(self)
   end
 end
 
