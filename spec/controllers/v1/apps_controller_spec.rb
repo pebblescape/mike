@@ -59,7 +59,7 @@ describe V1::AppsController, type: :controller do
   end
 
   context 'push' do
-    it 'should process a push' do
+    it 'should process a push', :vcr do
       build = Fabricate.attributes_for(:build, app: app)
 
       fakeinfo = {"process_types" => [{"web" => "bundle exec unicorn -p $PORT -c ./config/unicorn.rb"}],"app_size" => 128581632, "buildpack_name" => "Ruby"}

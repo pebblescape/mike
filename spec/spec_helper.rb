@@ -17,8 +17,6 @@ require 'rubygems'
 
 require 'fabrication'
 require 'certified'
-require 'fakeweb'
-FakeWeb.allow_net_connect = false
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)

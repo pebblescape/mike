@@ -68,7 +68,8 @@ end
 
 # TEST
 group :test do
-  gem 'fakeweb', require: false
+  gem 'webmock', require: false
+  gem 'vcr', require: false
   gem 'minitest', require: false
 end
 

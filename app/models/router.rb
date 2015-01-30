@@ -1,10 +1,10 @@
 class Router
   def self.add_dyno(dyno)
-    client.set(make_key(app, "endpoints", dyno.ip_address), value: dyno.url)
+    client.set(make_key(dyno.app, "endpoints", dyno.ip_address), value: dyno.url)
   end
 
   def self.remove_dyno(dyno)
-    client.delete(make_key(app, "endpoints", dyno.ip_address))
+    client.delete(make_key(dyno.app, "endpoints", dyno.ip_address))
   end
 
   def self.sync_app(app)

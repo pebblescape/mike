@@ -1,0 +1,143 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-2/endpoints/127.0.0.1
+    body:
+      encoding: US-ASCII
+      string: value=http%3A%2F%2F127.0.0.1%3A5000
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json
+      X-Etcd-Index:
+      - '47'
+      X-Raft-Index:
+      - '21597'
+      X-Raft-Term:
+      - '1'
+      Date:
+      - Fri, 30 Jan 2015 15:17:45 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-2/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":47,"createdIndex":47}}'
+    http_version: 
+  recorded_at: Fri, 30 Jan 2015 15:17:45 GMT
+- request:
+    method: put
+    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-2/hostname
+    body:
+      encoding: US-ASCII
+      string: value=super-app-2.pebblesinspace.com
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json
+      X-Etcd-Index:
+      - '48'
+      X-Raft-Index:
+      - '21598'
+      X-Raft-Term:
+      - '1'
+      Date:
+      - Fri, 30 Jan 2015 15:17:45 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-2/hostname","value":"super-app-2.pebblesinspace.com","modifiedIndex":48,"createdIndex":48}}'
+    http_version: 
+  recorded_at: Fri, 30 Jan 2015 15:17:45 GMT
+- request:
+    method: put
+    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-0/endpoints/127.0.0.1
+    body:
+      encoding: US-ASCII
+      string: value=http%3A%2F%2F127.0.0.1%3A5000
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      X-Etcd-Index:
+      - '49'
+      X-Raft-Index:
+      - '21920'
+      X-Raft-Term:
+      - '1'
+      Date:
+      - Fri, 30 Jan 2015 15:20:26 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-0/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":49,"createdIndex":49},"prevNode":{"key":"/pebblescape/apps/super-app-0/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":45,"createdIndex":45}}'
+    http_version: 
+  recorded_at: Fri, 30 Jan 2015 15:20:26 GMT
+- request:
+    method: put
+    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-0/hostname
+    body:
+      encoding: US-ASCII
+      string: value=super-app-0.pebblesinspace.com
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      X-Etcd-Index:
+      - '50'
+      X-Raft-Index:
+      - '21921'
+      X-Raft-Term:
+      - '1'
+      Date:
+      - Fri, 30 Jan 2015 15:20:26 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-0/hostname","value":"super-app-0.pebblesinspace.com","modifiedIndex":50,"createdIndex":50},"prevNode":{"key":"/pebblescape/apps/super-app-0/hostname","value":"super-app-0.pebblesinspace.com","modifiedIndex":46,"createdIndex":46}}'
+    http_version: 
+  recorded_at: Fri, 30 Jan 2015 15:20:26 GMT
+recorded_with: VCR 2.9.3
