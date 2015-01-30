@@ -140,4 +140,74 @@ http_interactions:
       string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-0/hostname","value":"super-app-0.pebblesinspace.com","modifiedIndex":50,"createdIndex":50},"prevNode":{"key":"/pebblescape/apps/super-app-0/hostname","value":"super-app-0.pebblesinspace.com","modifiedIndex":46,"createdIndex":46}}'
     http_version: 
   recorded_at: Fri, 30 Jan 2015 15:20:26 GMT
+- request:
+    method: put
+    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-1/endpoints/127.0.0.1
+    body:
+      encoding: US-ASCII
+      string: value=http%3A%2F%2F127.0.0.1%3A5000
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json
+      X-Etcd-Index:
+      - '51'
+      X-Raft-Index:
+      - '22940'
+      X-Raft-Term:
+      - '1'
+      Date:
+      - Fri, 30 Jan 2015 15:28:55 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-1/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":51,"createdIndex":51}}'
+    http_version: 
+  recorded_at: Fri, 30 Jan 2015 15:28:55 GMT
+- request:
+    method: put
+    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-1/hostname
+    body:
+      encoding: US-ASCII
+      string: value=super-app-1.pebblesinspace.com
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json
+      X-Etcd-Index:
+      - '52'
+      X-Raft-Index:
+      - '22941'
+      X-Raft-Term:
+      - '1'
+      Date:
+      - Fri, 30 Jan 2015 15:28:55 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-1/hostname","value":"super-app-1.pebblesinspace.com","modifiedIndex":52,"createdIndex":52}}'
+    http_version: 
+  recorded_at: Fri, 30 Jan 2015 15:28:55 GMT
 recorded_with: VCR 2.9.3
