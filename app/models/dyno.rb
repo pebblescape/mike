@@ -40,7 +40,11 @@ class Dyno < ActiveRecord::Base
   end
 
   def url
-    "http://#{ip_address}:#{port}"
+    "http://#{server}"
+  end
+
+  def server
+    "#{ip_address}:#{port}"
   end
 
   def spawn
