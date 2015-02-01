@@ -40,7 +40,6 @@ class Build < ActiveRecord::Base
     create!(params.merge(defaults)).tap do |build|
       image = container.commit
       image.tag(repo: "pebble/#{app.name}", tag: build.id)
-      image.tag(repo: "pebble/#{app.name}")
       container.remove
 
       infocnt = Docker::Container.create('Cmd' => ['info'], 'Image' => image.id)

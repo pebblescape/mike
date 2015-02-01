@@ -16,7 +16,7 @@ class Router
   private
 
   def self.client
-    Etcd.client
+    Etcd.client(host: ENV['ETCD_HOST'] || 'localhost', port: 4001)
   end
 
   def self.app_key(app)
