@@ -5,6 +5,7 @@ class Router
 
   def self.remove_dyno(dyno)
     client.delete(make_key(dyno.app, "endpoints", dyno.ip_address))
+  rescue Etcd::KeyNotFound
   end
 
   def self.sync_app(app)
