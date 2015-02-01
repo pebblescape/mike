@@ -22,8 +22,8 @@ gem 'barber'
 gem 'slim'
 
 # BACKEND
-# gem 'sentry-raven'
-# gem "skylight"
+gem 'sentry-raven'
+gem 'skylight'
 gem 'active_model_serializers'
 gem 'oj'
 gem 'rack-cors', require: false
@@ -34,6 +34,7 @@ gem 'lru_redux'
 gem 'docker-api'
 gem 'highline'
 gem 'etcd'
+gem 'whenever', require: false
 
 
 # DEV & TEST

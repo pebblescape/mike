@@ -25,7 +25,7 @@ class Release < ActiveRecord::Base
   end
 
   def deploy!
-    app.dynos.destroy_all
+    DynoReaper.perform_in(1.minute, app.dynos.map(&:id))
 
     app.formation.each do |type, count|
       count.to_i.times do |i|
