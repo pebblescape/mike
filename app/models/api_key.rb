@@ -13,10 +13,10 @@ class ApiKey < ActiveRecord::Base
     save!
   end
 
-  def self.create_master_key
+  def self.create_master_key(key = SecureRandom.hex(32))
     api_key = ApiKey.find_by(user_id: nil)
     if api_key.blank?
-      api_key = ApiKey.create(key: SecureRandom.hex(32), created_by: Mike.system_user)
+      api_key = ApiKey.create(key: key, created_by: Mike.system_user)
     end
     api_key
   end
