@@ -121,6 +121,8 @@ namespace :bootstrap do
       volumes: {'/var/run/docker.sock' => '/var/run/docker.sock'},
       env: [
         "PORT=5000",
+        "DATABASE_URL=postgres://#{dbname}:#{dbpass}@db/#{dbname}",
+        "REDIS_URL=redis://redis:6379",
         "DBPASS=#{dbpass}",
         "DBUSER=#{dbname}",
         "DBNAME=#{dbname}",
