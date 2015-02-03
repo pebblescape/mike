@@ -2,10 +2,10 @@
 http_interactions:
 - request:
     method: put
-    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-2/endpoints/127.0.0.1
+    uri: http://localhost:4001/v2/keys/pebblescape/apps/super-app-0/endpoints/127.0.0.1
     body:
       encoding: US-ASCII
-      string: value=http%3A%2F%2F127.0.0.1%3A5000
+      string: value=127.0.0.1%3A5000
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -20,94 +20,27 @@ http_interactions:
     headers:
       Content-Type:
       - application/json
+      X-Etcd-Cluster-Id:
+      - e79581c9a7943684
       X-Etcd-Index:
-      - '47'
+      - '3'
       X-Raft-Index:
-      - '21597'
+      - '26541'
       X-Raft-Term:
-      - '1'
+      - '2'
       Date:
-      - Fri, 30 Jan 2015 15:17:45 GMT
-      Transfer-Encoding:
-      - chunked
+      - Tue, 03 Feb 2015 13:00:54 GMT
+      Content-Length:
+      - '144'
     body:
       encoding: UTF-8
-      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-2/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":47,"createdIndex":47}}'
+      string: |
+        {"action":"set","node":{"key":"/pebblescape/apps/super-app-0/endpoints/127.0.0.1","value":"127.0.0.1:5000","modifiedIndex":3,"createdIndex":3}}
     http_version: 
-  recorded_at: Fri, 30 Jan 2015 15:17:45 GMT
+  recorded_at: Tue, 03 Feb 2015 13:00:54 GMT
 - request:
     method: put
-    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-2/hostname
-    body:
-      encoding: US-ASCII
-      string: value=super-app-2.pebblesinspace.com
-    headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 201
-      message: Created
-    headers:
-      Content-Type:
-      - application/json
-      X-Etcd-Index:
-      - '48'
-      X-Raft-Index:
-      - '21598'
-      X-Raft-Term:
-      - '1'
-      Date:
-      - Fri, 30 Jan 2015 15:17:45 GMT
-      Transfer-Encoding:
-      - chunked
-    body:
-      encoding: UTF-8
-      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-2/hostname","value":"super-app-2.pebblesinspace.com","modifiedIndex":48,"createdIndex":48}}'
-    http_version: 
-  recorded_at: Fri, 30 Jan 2015 15:17:45 GMT
-- request:
-    method: put
-    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-0/endpoints/127.0.0.1
-    body:
-      encoding: US-ASCII
-      string: value=http%3A%2F%2F127.0.0.1%3A5000
-    headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Content-Type:
-      - application/json
-      X-Etcd-Index:
-      - '49'
-      X-Raft-Index:
-      - '21920'
-      X-Raft-Term:
-      - '1'
-      Date:
-      - Fri, 30 Jan 2015 15:20:26 GMT
-      Transfer-Encoding:
-      - chunked
-    body:
-      encoding: UTF-8
-      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-0/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":49,"createdIndex":49},"prevNode":{"key":"/pebblescape/apps/super-app-0/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":45,"createdIndex":45}}'
-    http_version: 
-  recorded_at: Fri, 30 Jan 2015 15:20:26 GMT
-- request:
-    method: put
-    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-0/hostname
+    uri: http://localhost:4001/v2/keys/pebblescape/apps/super-app-0/hostname
     body:
       encoding: US-ASCII
       string: value=super-app-0.pebblesinspace.com
@@ -120,94 +53,27 @@ http_interactions:
       - Ruby
   response:
     status:
-      code: 200
-      message: OK
-    headers:
-      Content-Type:
-      - application/json
-      X-Etcd-Index:
-      - '50'
-      X-Raft-Index:
-      - '21921'
-      X-Raft-Term:
-      - '1'
-      Date:
-      - Fri, 30 Jan 2015 15:20:26 GMT
-      Transfer-Encoding:
-      - chunked
-    body:
-      encoding: UTF-8
-      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-0/hostname","value":"super-app-0.pebblesinspace.com","modifiedIndex":50,"createdIndex":50},"prevNode":{"key":"/pebblescape/apps/super-app-0/hostname","value":"super-app-0.pebblesinspace.com","modifiedIndex":46,"createdIndex":46}}'
-    http_version: 
-  recorded_at: Fri, 30 Jan 2015 15:20:26 GMT
-- request:
-    method: put
-    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-1/endpoints/127.0.0.1
-    body:
-      encoding: US-ASCII
-      string: value=http%3A%2F%2F127.0.0.1%3A5000
-    headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-      User-Agent:
-      - Ruby
-  response:
-    status:
       code: 201
       message: Created
     headers:
       Content-Type:
       - application/json
+      X-Etcd-Cluster-Id:
+      - e79581c9a7943684
       X-Etcd-Index:
-      - '51'
+      - '4'
       X-Raft-Index:
-      - '22940'
+      - '26542'
       X-Raft-Term:
-      - '1'
+      - '2'
       Date:
-      - Fri, 30 Jan 2015 15:28:55 GMT
-      Transfer-Encoding:
-      - chunked
+      - Tue, 03 Feb 2015 13:00:54 GMT
+      Content-Length:
+      - '149'
     body:
       encoding: UTF-8
-      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-1/endpoints/127.0.0.1","value":"http://127.0.0.1:5000","modifiedIndex":51,"createdIndex":51}}'
+      string: |
+        {"action":"set","node":{"key":"/pebblescape/apps/super-app-0/hostname","value":"super-app-0.pebblesinspace.com","modifiedIndex":4,"createdIndex":4}}
     http_version: 
-  recorded_at: Fri, 30 Jan 2015 15:28:55 GMT
-- request:
-    method: put
-    uri: http://127.0.0.1:4001/v2/keys/pebblescape/apps/super-app-1/hostname
-    body:
-      encoding: US-ASCII
-      string: value=super-app-1.pebblesinspace.com
-    headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 201
-      message: Created
-    headers:
-      Content-Type:
-      - application/json
-      X-Etcd-Index:
-      - '52'
-      X-Raft-Index:
-      - '22941'
-      X-Raft-Term:
-      - '1'
-      Date:
-      - Fri, 30 Jan 2015 15:28:55 GMT
-      Transfer-Encoding:
-      - chunked
-    body:
-      encoding: UTF-8
-      string: '{"action":"set","node":{"key":"/pebblescape/apps/super-app-1/hostname","value":"super-app-1.pebblesinspace.com","modifiedIndex":52,"createdIndex":52}}'
-    http_version: 
-  recorded_at: Fri, 30 Jan 2015 15:28:55 GMT
+  recorded_at: Tue, 03 Feb 2015 13:00:54 GMT
 recorded_with: VCR 2.9.3

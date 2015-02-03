@@ -73,7 +73,7 @@ describe V1::AppsController, type: :controller do
       expect(container).to receive(:id).and_return(SecureRandom.hex)
       expect(container).to receive(:attach).and_return([[JSON.dump(fakeinfo)], []])
 
-      expect(image).to receive(:tag).twice
+      expect(image).to receive(:tag).once
       expect(image).to receive(:id).twice.and_return(SecureRandom.hex)
 
       expect(Docker::Container).to receive(:get).and_return(container)
