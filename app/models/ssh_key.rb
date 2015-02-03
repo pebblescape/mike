@@ -14,7 +14,7 @@ class SshKey < ActiveRecord::Base
   COLONS = /(.{2})(?=.)/
 
   def generate_fingerprint
-    pubkey = self.key.clone.gsub!(PUBRE, '')
+    pubkey = self.key.dup.gsub!(PUBRE, '')
     pubkey = Digest::MD5.hexdigest(Base64.decode64(pubkey))
     self.fingerprint = pubkey.gsub!(COLONS, '\1:')
   end

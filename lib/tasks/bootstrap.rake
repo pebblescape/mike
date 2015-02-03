@@ -18,7 +18,7 @@ namespace :bootstrap do
 
   def make_container(image, name, options={})
     existing = Docker::Container.all(all: true)
-    cnt = existing.select { |c| c.info["Names"].include?("/#{name}") }.first
+    cnt = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/#{name}") }.first
     unless cnt
       title "Starting #{name}" if name
       apiopts = {
@@ -75,6 +75,7 @@ namespace :bootstrap do
 
     dbpass = ENV['DBPASS'] || ask('Database password: ') { |q| q.echo = 'x' }
 
+    pubip = ENV['HOSTIP'] || ask('Host IP: ')
     port = ENV['PORT'] || ask('Mike port: ')
     sshport = ENV['SSHPORT'] || ask('Git port: ')
     sshkey = ENV['SSHHOSTKEY'] || ask('SSH host key path: ')
@@ -84,11 +85,12 @@ namespace :bootstrap do
     skylight = ENV['SKYLIGHT_AUTHENTICATION'] || ask('Skylight key: ')
 
     dbname = 'mike'
-    pubip=Socket::getaddrinfo(Socket.gethostname,"echo",Socket::AF_INET)[0][3]
 
     preload_image('pebbles/pebblerunner')
     preload_image('pebbles/mike')
     preload_image('pebbles/receiver')
+    preload_image('redis')
+    preload_image('postgres')
     preload_image('busybox')
     preload_image('quay.io/coreos/etcd:v2.0.0')
 
@@ -105,8 +107,12 @@ namespace :bootstrap do
     ]).start
 
     make_container('quay.io/coreos/etcd:v2.0.0', 'etcd', volumes_from: ["etcd-volume"],
-      cmd: ["-peer-addr", "#{pubip}:7001", "-addr", "#{pubip}:4001", "-bind-addr", "0.0.0.0:4001"],
-      ports: {
+      cmd: [
+        "-peer-addr", "#{pubip}:7001",
+        "-addr", "#{pubip}:4001",
+        "-bind-addr", "0.0.0.0:4001",
+        "-initial-cluster", "default=http://#{pubip}:7001"
+      ], ports: {
         '4001': '4001',
         '7001': '7001'
       }).start
@@ -139,26 +145,27 @@ namespace :bootstrap do
       }, volumes_from: ['mike-receiver-volume'],
       env: ["MIKE_AUTH_KEY=#{mikekey}"]).start
 
-
     topic "Running migrations"
     migrator = make_container('pebbles/mike', nil,
       mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:migrate"]))
     migrator.tap(&:start).attach(tty: true).each do |line|
-      say line[0] if line[0]
+      Kernel.puts(line[0]) if line[0]
     end
     migrator.delete(force: true)
 
     topic "Bootstrapping database"
-    bootstrapper = make_container('pebbles/mike', nil,
-      mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], env: [
-        "MIKE_AUTH_KEY=#{mikekey}",
-        "ADMIN_NAME=#{adminname}",
-        "ADMIN_EMAIL=#{adminemail}",
-        "ADMIN_PASS=#{adminpassword}",
-        "ADMIN_KEY=#{adminkey}"
-      ]))
+    opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"])
+    opts[:env].concat([
+      "MIKE_AUTH_KEY=#{mikekey}",
+      "ADMIN_NAME=#{adminname}",
+      "ADMIN_EMAIL=#{adminemail}",
+      "ADMIN_PASS=#{adminpassword}",
+      "ADMIN_KEY=#{adminkey}"
+    ]).flatten.compact
+
+    bootstrapper = make_container('pebbles/mike', nil, opts)
     bootstrapper.tap(&:start).attach(tty: true).each do |line|
-      say line[0] if line[0]
+      Kernel.puts(line[0]) if line[0]
     end
     bootstrapper.delete(force: true)
   end
