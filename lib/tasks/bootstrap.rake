@@ -95,7 +95,7 @@ namespace :bootstrap do
     preload_image('quay.io/coreos/etcd:v2.0.0')
 
     existing = Docker::Container.all(all: true)
-    bootstrap = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/#{name}") }.empty?
+    bootstrap = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/mike") }.empty?
 
     make_container('busybox', 'etcd-volume', volumes: {"/default.etcd" => nil}).start
     make_container('busybox', 'mike-receiver-volume', volumes: {
