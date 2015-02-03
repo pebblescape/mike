@@ -97,7 +97,7 @@ namespace :bootstrap do
     existing = Docker::Container.all(all: true)
     bootstrap = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/mike") }.empty?
 
-    make_container('busybox', 'etcd-volume', volumes: {"/default.etcd" => nil}).start
+    make_container('busybox', 'mike-etcd-volume', volumes: {"/default.etcd" => nil}).start
     make_container('busybox', 'mike-receiver-volume', volumes: {
       "/tmp/pebble-repos" => nil,
       "/tmp/pebble-cache" => nil
@@ -109,7 +109,7 @@ namespace :bootstrap do
       "POSTGRES_USER=#{dbname}"
     ]).start
 
-    make_container('quay.io/coreos/etcd:v2.0.0', 'etcd', volumes_from: ["etcd-volume"],
+    make_container('quay.io/coreos/etcd:v2.0.0', 'mike-etcd', volumes_from: ["mike-etcd-volume"],
       cmd: [
         "-peer-addr", "#{pubip}:7001",
         "-addr", "#{pubip}:4001",
@@ -135,7 +135,7 @@ namespace :bootstrap do
       ], links: {
         "mike-postgres" => "db",
         "mike-redis" => "redis",
-        "etcd" => nil
+        "mike-etcd" => "etcd"
       }
     }
 

@@ -46,6 +46,7 @@ class Build < ActiveRecord::Base
       info = infocnt.tap(&:start).attach
       infocnt.remove
 
+      # TODO: get default env vars
       parsed = JSON.parse(info[0][0])
       build.process_types = parsed['process_types'].inject(&:merge)
       build.size = parsed['app_size']

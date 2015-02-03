@@ -1,4 +1,3 @@
-# TODO: delete containers etc when deleting
 class App < ActiveRecord::Base
   default_scope { order(:created_at) }
 
@@ -11,6 +10,7 @@ class App < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
+  before_save :check_reserved
   before_create :set_formation
 
   def self.find_by_uuid_or_name(query)
@@ -21,18 +21,26 @@ class App < ActiveRecord::Base
     end
   end
 
+  # TODO: configurable root host
   def hostname
     "#{name}.pebblesinspace.com"
+  end
+
+  def sync_router
+    Router.sync_app(self)
+  end
+
+  private
+
+  # Mike reserves the api.domain subdomain
+  def check_reserved
+    self.name != 'api'
   end
 
   def set_formation
     unless self.formation
       self.formation = {web: 1}
     end
-  end
-
-  def sync_router
-    Router.sync_app(self)
   end
 end
 

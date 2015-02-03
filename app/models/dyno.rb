@@ -48,6 +48,7 @@ class Dyno < ActiveRecord::Base
   end
 
   def spawn
+    # TODO: make sure not to override DATABASE_URL
     container = Docker::Container.create(
       'Image' => release.build.image_id,
       'Cmd'   => ["start", proctype],
