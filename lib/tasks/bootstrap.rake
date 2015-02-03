@@ -94,6 +94,9 @@ namespace :bootstrap do
     preload_image('busybox')
     preload_image('quay.io/coreos/etcd:v2.0.0')
 
+    existing = Docker::Container.all(all: true)
+    bootstrap = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/#{name}") }.empty?
+
     make_container('busybox', 'etcd-volume', volumes: {"/default.etcd" => nil}).start
     make_container('busybox', 'mike-receiver-volume', volumes: {
       "/tmp/pebble-repos" => nil,
@@ -145,31 +148,34 @@ namespace :bootstrap do
         '/var/run/docker.sock' => '/var/run/docker.sock',
         sshkey => '/ssh_host_rsa_key'
       }, volumes_from: ['mike-receiver-volume'],
-      env: ["MIKE_AUTH_KEY=#{mikekey}"]).start
+      env: ["MIKE_AUTH_KEY=#{mikekey}"],
+      links: {"mike" => nil}).start
 
-    topic "Running migrations"
-    migrator = make_container('pebbles/mike', nil,
-      mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:migrate"]))
-    migrator.tap(&:start).attach(tty: true).each do |line|
-      Kernel.puts(line[0]) if line[0]
+    if bootstrap
+      topic "Running migrations"
+      migrator = make_container('pebbles/mike', nil,
+        mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:migrate"]))
+      migrator.tap(&:start).attach(tty: true).each do |line|
+        Kernel.puts(line[0]) if line[0]
+      end
+      migrator.delete(force: true)
+
+      topic "Bootstrapping database"
+      opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"])
+      opts[:env].concat([
+        "MIKE_AUTH_KEY=#{mikekey}",
+        "ADMIN_NAME=#{adminname}",
+        "ADMIN_EMAIL=#{adminemail}",
+        "ADMIN_PASS=#{adminpassword}",
+        "ADMIN_KEY=#{adminkey}"
+      ]).flatten.compact
+
+      bootstrapper = make_container('pebbles/mike', nil, opts)
+      bootstrapper.tap(&:start).attach(tty: true).each do |line|
+        Kernel.puts(line[0]) if line[0]
+      end
+      bootstrapper.delete(force: true)
     end
-    migrator.delete(force: true)
-
-    topic "Bootstrapping database"
-    opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"])
-    opts[:env].concat([
-      "MIKE_AUTH_KEY=#{mikekey}",
-      "ADMIN_NAME=#{adminname}",
-      "ADMIN_EMAIL=#{adminemail}",
-      "ADMIN_PASS=#{adminpassword}",
-      "ADMIN_KEY=#{adminkey}"
-    ]).flatten.compact
-
-    bootstrapper = make_container('pebbles/mike', nil, opts)
-    bootstrapper.tap(&:start).attach(tty: true).each do |line|
-      Kernel.puts(line[0]) if line[0]
-    end
-    bootstrapper.delete(force: true)
   end
 
   task database: :environment do
