@@ -32,9 +32,13 @@ namespace :bootstrap do
           'Links' => [],
           'VolumesFrom' => [],
           'PortBindings' => {},
-          "RestartPolicy": { "Name": "always", "MaximumRetryCount": 10 }
+          "RestartPolicy": {}
         }
       }
+
+      if options.delete(:restart)
+        apiopts['HostConfig']['RestartPolicy'] = { "Name": "always", "MaximumRetryCount": 10 }
+      end
 
       apiopts['Cmd'] = options.delete(:cmd) || []
       apiopts['User'] = options.delete(:user) || ''
@@ -104,13 +108,13 @@ namespace :bootstrap do
       "/tmp/pebble-cache" => nil
     }).start
 
-    make_container('redis', 'mike-redis').start
-    make_container('postgres', 'mike-postgres', env: [
+    make_container('redis', 'mike-redis', restart: true).start
+    make_container('postgres', 'mike-postgres', restart: true, env: [
       "POSTGRES_PASSWORD=#{dbpass}",
       "POSTGRES_USER=#{dbname}"
     ]).start
 
-    make_container('quay.io/coreos/etcd:v2.0.0', 'mike-etcd', volumes_from: ["mike-etcd-volume"],
+    make_container('quay.io/coreos/etcd:v2.0.0', 'mike-etcd', restart: true, volumes_from: ["mike-etcd-volume"],
       cmd: [
         "-peer-addr", "#{pubip}:7001",
         "-addr", "#{pubip}:4001",
@@ -122,6 +126,7 @@ namespace :bootstrap do
       }).start
 
     mike_opts = {
+      restart: true,
       volumes: {'/var/run/docker.sock' => '/var/run/docker.sock'},
       env: [
         "PORT=5000",
@@ -143,7 +148,7 @@ namespace :bootstrap do
     make_container('pebbles/mike', 'mike', mike_opts.merge(cmd: ["start", "web"], ports: {"#{port}" => '5000'})).start
     make_container('pebbles/mike', 'mike-worker', mike_opts.merge(cmd: ["start", "worker"])).start
 
-    make_container('pebbles/receiver', 'mike-receiver', ports: {"#{sshport}" => '22'},
+    make_container('pebbles/receiver', 'mike-receiver', restart: true, ports: {"#{sshport}" => '22'},
       volumes: {
         '/var/run/docker.sock' => '/var/run/docker.sock',
         sshkey => '/ssh_host_rsa_key'
