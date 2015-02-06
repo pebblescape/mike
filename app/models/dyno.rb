@@ -48,11 +48,14 @@ class Dyno < ActiveRecord::Base
   end
 
   def spawn
-    # TODO: make sure not to override DATABASE_URL
+    config = {
+      "DATABASE_URL" +> "sqlite3:///app/db/test.sqlite"
+    }.merge(release.config_vars).map { |k,v| "#{k}=#{v}" }
+
     container = Docker::Container.create(
       'Image' => release.build.image_id,
       'Cmd'   => ["start", proctype],
-      'Env'   => release.config_vars.map { |k,v| "#{k}=#{v}" }.concat(["PORT=#{port}", "DATABASE_URL=sqlite3:///app/db/test.sqlite"])
+      'Env'   => config.concat(["PORT=#{port}")
     ).start
 
     self.container_id = container.id
