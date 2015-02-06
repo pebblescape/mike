@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.2.0'
 
-gem 'rails', '4.1.9'
+gem 'rails', '4.2.0'
 gem 'pg'
 gem 'hiredis'
 gem 'redis', require: ['redis', 'redis/connection/hiredis']
@@ -10,7 +10,7 @@ gem 'sidekiq'
 gem 'sinatra', require: nil
 
 # # ASSETS
-gem 'sass-rails', '~> 4.0.5'
+gem 'sass-rails', '~> 5.0.1'
 gem 'less-rails'
 gem 'uglifier'
 gem 'therubyracer', require: 'v8'
@@ -34,7 +34,6 @@ gem 'lru_redux'
 gem 'docker-api'
 gem 'highline'
 gem 'etcd'
-gem 'whenever', require: false
 
 
 # DEV & TEST

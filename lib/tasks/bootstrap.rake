@@ -31,7 +31,8 @@ namespace :bootstrap do
           'Binds' => [],
           'Links' => [],
           'VolumesFrom' => [],
-          'PortBindings' => {}
+          'PortBindings' => {},
+          "RestartPolicy": { "Name": "always", "MaximumRetryCount": 10 }
         }
       }
 
@@ -141,7 +142,6 @@ namespace :bootstrap do
 
     make_container('pebbles/mike', 'mike', mike_opts.merge(cmd: ["start", "web"], ports: {"#{port}" => '5000'})).start
     make_container('pebbles/mike', 'mike-worker', mike_opts.merge(cmd: ["start", "worker"])).start
-    make_container('pebbles/mike', 'mike-cron', mike_opts.merge(cmd: ["start", "cron"], volumes: {})).start
 
     make_container('pebbles/receiver', 'mike-receiver', ports: {"#{sshport}" => '22'},
       volumes: {

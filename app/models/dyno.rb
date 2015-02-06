@@ -49,13 +49,13 @@ class Dyno < ActiveRecord::Base
 
   def spawn
     config = {
-      "DATABASE_URL" +> "sqlite3:///app/db/test.sqlite"
+      "DATABASE_URL" => "sqlite3:///app/db/test.sqlite"
     }.merge(release.config_vars).map { |k,v| "#{k}=#{v}" }
 
     container = Docker::Container.create(
       'Image' => release.build.image_id,
       'Cmd'   => ["start", proctype],
-      'Env'   => config.concat(["PORT=#{port}")
+      'Env'   => config.concat(["PORT=#{port}"])
     ).start
 
     self.container_id = container.id
