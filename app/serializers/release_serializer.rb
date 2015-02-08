@@ -1,5 +1,9 @@
 class ReleaseSerializer < ApplicationSerializer
-  attributes :id, :app, :user, :build, :version, :description, :config_vars
+  attributes :id, :app, :user, :build, :version, :description, :config_vars, :name
+
+  def name
+    "v#{object.version}"
+  end
 
   def user
     {

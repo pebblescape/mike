@@ -13,16 +13,21 @@ Rails.application.routes.draw do
   api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.pebblescape+json; version=1"}) do
     resources :apps do
       resources :builds
+      resources :releases, only: [:index, :show, :create]
+      resource :config_vars, only: [:show, :update] do
+        member do
+          delete ':id' => 'config_vars#destroy'
+        end
+      end
 
       post :push
     end
     resources :users
 
     get 'auth' => 'users#auth'
+    post 'login' => 'users#login'
+    get 'user' => 'users#whoami'
   end
-
-  resources :static
-  get "login" => "static#show", id: "login"
 
   resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy, :become] do
     collection do

@@ -1,5 +1,5 @@
 class AppSerializer < ApplicationSerializer
-  attributes :id, :name, :owner, :created_at, :updated_at, :config_vars
+  attributes :id, :name, :owner, :created_at, :updated_at, :config_vars, :build_size, :web_url
 
   def owner
     {
@@ -7,5 +7,13 @@ class AppSerializer < ApplicationSerializer
       email: object.owner.email,
       name: object.owner.name
     }
+  end
+
+  def build_size
+    object.builds.last.try(:size)
+  end
+
+  def web_url
+    "http://#{object.hostname}"
   end
 end

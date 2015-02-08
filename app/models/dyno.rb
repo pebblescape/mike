@@ -12,14 +12,12 @@ class Dyno < ActiveRecord::Base
     dyno.port = 5000
     dyno.spawn
 
-    # update Hipache with the new gear IP/ports (only add web gears)
     return unless dyno.proctype == "web"
     Router.add_dyno(self)
   end
 
-  before_destroy do |gear|
-    # remove web gears from Hipache
-    return unless gear.proctype == "web"
+  before_destroy do |dyno|
+    return unless dyno.proctype == "web"
     Router.remove_dyno(self)
   end
 
@@ -55,7 +53,10 @@ class Dyno < ActiveRecord::Base
     container = Docker::Container.create(
       'Image' => release.build.image_id,
       'Cmd'   => ["start", proctype],
-      'Env'   => config.concat(["PORT=#{port}"])
+      'Env'   => config.concat(["PORT=#{port}"]),
+      'HostConfig' => {
+        'RestartPolicy' => { "Name": "always", "MaximumRetryCount": 10 }
+      }
     ).start
 
     self.container_id = container.id

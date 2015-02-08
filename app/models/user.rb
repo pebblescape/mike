@@ -69,6 +69,10 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
+    if ApiKey.where(key: password).first.try(:user) == self
+      return true
+    end
+
     return false unless password_hash && salt
     self.password_hash == hash_password(password, salt)
   end

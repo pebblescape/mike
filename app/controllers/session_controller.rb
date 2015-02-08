@@ -47,9 +47,6 @@ class SessionController < ApplicationController
     end
 
     render json: { result: "ok" }
-
-  rescue RateLimiter::LimitExceeded
-    json_error(429, I18n.t("rate_limiter.slow_down"))
   end
 
   def current

@@ -9,7 +9,7 @@ class V1::AppsController < ApiController
     app.owner = current_user
     app.save
 
-    render json: app
+    render json: app, status: 201
   end
 
   def push
@@ -31,6 +31,17 @@ class V1::AppsController < ApiController
     app = App.find_by_uuid_or_name(params[:id])
     raise Mike::NotFound unless app
     # TODO: auth. app ownership check here
+    render json: app
+  end
+
+  def destroy
+    params.require(:id)
+    app = App.find_by_uuid_or_name(params[:id])
+    raise Mike::NotFound unless app
+
+    # TODO: auth. app ownership check here
+    app.destroy
+
     render json: app
   end
 

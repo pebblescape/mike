@@ -24,6 +24,20 @@ en:
   errors:
     not_logged_in: 'Invalid API key or no API key specified.'
     invalid_ssh_key: 'No such SSH key found.'
-  
+    json_body_invalid: 'Request body does not contain valid JSON.'
+
   login:
     incorrect_username_email_or_password: "Incorrect username, email or password"
+
+  rate_limiter:
+    slow_down: "You have performed this action too many times, try again later"
+    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    hours:
+      one: "1 hour"
+      other: "%{count} hours"
+    minutes:
+      one: "1 minute"
+      other: "%{count} minutes"
+    seconds:
+      one: "1 second"
+      other: "%{count} seconds"
