@@ -24,7 +24,7 @@ describe V1::AppsController, type: :controller do
 
       authenticated_request(:post, 'create', {app: newapp}, user)
 
-      assert_response 200
+      assert_response 201
       expect(response.body).to include(newapp[:name])
       expect(response.body).to include(user.id)
     end
