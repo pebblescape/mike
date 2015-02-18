@@ -54,4 +54,8 @@ module Mike
   def self.sidekiq_redis_config
     { url: $redis.url, namespace: 'sidekiq' }
   end
+
+  def self.repo_path
+    Rails.env.development? ? File.join(Rails.root, 'tmp', 'repos') : '/tmp/pebble-repos'
+  end
 end

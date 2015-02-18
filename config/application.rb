@@ -10,36 +10,36 @@ Bundler.require(*Rails.groups)
 module Mike
   class Application < Rails::Application
     require 'mike'
-    
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-    
+
     config.autoload_paths += Dir["#{config.root}/app/serializers"]
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
-    
-    require 'rails_redis'    
+
+    require 'rails_redis'
     # Use redis for our cache
     config.cache_store = RailsRedis.new_redis_store
     $redis = RailsRedis.new
 
     # http cache upstream
     config.action_dispatch.rack_cache = nil
-    
-    config.active_record.thread_safe!    
+
+    config.active_record.thread_safe!
     config.active_record.schema_format = :sql
-    
+
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000
     config.pbkdf2_algorithm = "sha256"
-    
+
     config.generators do |g|
       g.test_framework :rspec
     end
-    
+
     # Our templates shouldn't start with 'mike/templates'
     config.handlebars.templates_root = 'mike/templates'
-    
+
     # ember stuff only used for asset precompliation, production variant plays up
     config.ember.variant = :development
     config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"

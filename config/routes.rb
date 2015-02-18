@@ -10,6 +10,13 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
   end
 
+  # /app.git/
+  mount Grack::Bundle.new({
+    project_root: File.realpath(Mike.repo_path),
+    upload_pack:  true,
+    receive_pack: true
+  }), at: '/', constraints: lambda { |request| /^\/[\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
+
   api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.pebblescape+json; version=1"}) do
     resources :apps do
       resources :builds

@@ -15,10 +15,6 @@ gem 'less-rails'
 gem 'uglifier'
 gem 'therubyracer', require: 'v8'
 gem 'jquery-rails'
-gem 'ember-rails'
-gem 'ember-source'
-gem 'handlebars-source'
-gem 'barber'
 gem 'slim'
 
 # BACKEND
@@ -34,7 +30,7 @@ gem 'lru_redux'
 gem 'docker-api'
 gem 'highline'
 gem 'etcd'
-
+gem 'gitlab-grack', github: 'pebblescape/grack', require: 'grack'
 
 # DEV & TEST
 group :test, :development do
