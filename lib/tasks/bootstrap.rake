@@ -147,16 +147,14 @@ namespace :bootstrap do
     make_container('pebbles/mike', 'mike-worker', mike_opts.merge(cmd: ["start", "worker"])).start
 
     if bootstrap
-      topic "Running migrations"
+      topic "Loading schema"
       migrator = make_container('pebbles/mike', nil,
-        mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:schema:load"]))
-      migrator.tap(&:start).attach(tty: true).each do |line|
-        Kernel.puts(line[0]) if line[0]
-      end
+        mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
+      migrator.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
       migrator.delete(force: true)
 
       topic "Bootstrapping database"
-      opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"])
+      opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
       opts[:env].concat([
         "MIKE_AUTH_KEY=#{mikekey}",
         "ADMIN_NAME=#{adminname}",
@@ -165,9 +163,7 @@ namespace :bootstrap do
       ]).flatten.compact
 
       bootstrapper = make_container('pebbles/mike', nil, opts)
-      bootstrapper.tap(&:start).attach(tty: true).each do |line|
-        Kernel.puts(line[0]) if line[0]
-      end
+      bootstrapper.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
       bootstrapper.delete(force: true)
     end
   end
