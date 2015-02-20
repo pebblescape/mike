@@ -93,7 +93,6 @@ namespace :bootstrap do
 
     preload_image('pebbles/pebblerunner')
     preload_image('pebbles/mike')
-    preload_image('pebbles/receiver')
     preload_image('redis')
     preload_image('postgres')
     preload_image('busybox')
@@ -103,7 +102,7 @@ namespace :bootstrap do
     bootstrap = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/mike") }.empty?
 
     make_container('busybox', 'mike-etcd-volume', volumes: {"/default.etcd" => nil}).start
-    make_container('busybox', 'mike-receiver-volume', volumes: {
+    make_container('busybox', 'mike-volume', volumes: {
       "/tmp/pebble-repos" => nil,
       "/tmp/pebble-cache" => nil
     }).start
@@ -128,6 +127,7 @@ namespace :bootstrap do
     mike_opts = {
       restart: true,
       volumes: {'/var/run/docker.sock' => '/var/run/docker.sock'},
+      volumes_from: ['mike-volume'],
       env: [
         "PORT=5000",
         "DATABASE_URL=postgres://#{dbname}:#{dbpass}@db/#{dbname}",
@@ -147,14 +147,6 @@ namespace :bootstrap do
 
     make_container('pebbles/mike', 'mike', mike_opts.merge(cmd: ["start", "web"], ports: {"#{port}" => '5000'})).start
     make_container('pebbles/mike', 'mike-worker', mike_opts.merge(cmd: ["start", "worker"])).start
-
-    make_container('pebbles/receiver', 'mike-receiver', restart: true, ports: {"#{sshport}" => '22'},
-      volumes: {
-        '/var/run/docker.sock' => '/var/run/docker.sock',
-        sshkey => '/ssh_host_rsa_key'
-      }, volumes_from: ['mike-receiver-volume'],
-      env: ["MIKE_AUTH_KEY=#{mikekey}"],
-      links: {"mike" => nil}).start
 
     if bootstrap
       topic "Running migrations"

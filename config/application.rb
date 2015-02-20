@@ -37,14 +37,6 @@ module Mike
       g.test_framework :rspec
     end
 
-    # Our templates shouldn't start with 'mike/templates'
-    config.handlebars.templates_root = 'mike/templates'
-
-    # ember stuff only used for asset precompliation, production variant plays up
-    config.ember.variant = :development
-    config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
-    config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
-
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
