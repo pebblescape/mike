@@ -149,7 +149,7 @@ namespace :bootstrap do
     if bootstrap
       topic "Running migrations"
       migrator = make_container('pebbles/mike', nil,
-        mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:migrate"]))
+        mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:schema:load"]))
       migrator.tap(&:start).attach(tty: true).each do |line|
         Kernel.puts(line[0]) if line[0]
       end

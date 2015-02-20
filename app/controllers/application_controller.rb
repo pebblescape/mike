@@ -10,14 +10,9 @@ class ApplicationController < ActionController::Base
   before_filter :authorize_mini_profiler
   before_filter :redirect_to_login_if_required
 
-  rescue_from Mike::NotLoggedIn do |e|
+  rescue_from Mike::NotLoggedIn, Mike::InvalidAccess do |e|
     raise e if Rails.env.test?
-
-    if request.get?
-      redirect_to "/"
-    else
-      json_error(403, 'not_logged_in')
-    end
+    json_error(403, 'not_logged_in')
   end
 
   rescue_from Mike::NotFound do
