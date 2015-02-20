@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   # /app.git/
   mount Grack::Bundle.new({
-    project_root: File.realpath(Mike.repo_path),
+    project_root: Mike.repo_path,
     upload_pack:  true,
     receive_pack: true
   }), at: '/', constraints: lambda { |request| /^\/[\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]

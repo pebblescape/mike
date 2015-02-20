@@ -1,3 +1,4 @@
+require 'fileutils'
 require_dependency 'auth/default_current_user_provider'
 
 module Mike
@@ -56,6 +57,8 @@ module Mike
   end
 
   def self.repo_path
-    Rails.env.development? ? File.join(Rails.root, 'tmp', 'repos') : '/tmp/pebble-repos'
+    path = Rails.env.development? ? File.join(Rails.root, 'tmp', 'repos') : '/tmp/pebble-repos'
+    FileUtils.mkdir_p(path, mode: 0755)
+    File.realpath(path)
   end
 end
