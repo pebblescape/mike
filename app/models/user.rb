@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
 
   has_one :api_key, dependent: :destroy
 
-  has_many :ssh_keys, dependent: :destroy
   has_many :apps,     dependent: :destroy, foreign_key: :owner_id
   has_many :builds
   has_many :releases

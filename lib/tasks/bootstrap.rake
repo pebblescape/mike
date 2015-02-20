@@ -1,6 +1,7 @@
 require 'highline/import'
-require 'shell_helpers'
 require 'socket'
+require 'securerandom'
+require 'shell_helpers'
 
 namespace :bootstrap do
   include ShellHelpers
@@ -76,14 +77,11 @@ namespace :bootstrap do
     adminname = ENV['ADMIN_NAME'] || ask("Admin name: ")
     adminemail = ENV['ADMIN_EMAIL'] || ask("Admin email: ")
     adminpassword = ENV['ADMIN_PASS'] || ask("Admin password: ")  { |q| q.echo = 'x' }
-    adminkey = ENV['ADMIN_KEY'] || ask("Paste your public key in: ") { |q| q.echo = false }
 
     dbpass = ENV['DBPASS'] || ask('Database password: ') { |q| q.echo = 'x' }
 
     pubip = ENV['HOSTIP'] || ask('Host IP: ')
     port = ENV['PORT'] || ask('Mike port: ')
-    sshport = ENV['SSHPORT'] || ask('Git port: ')
-    sshkey = ENV['SSHHOSTKEY'] || ask('SSH host key path: ')
     mikekey = ENV['MIKE_AUTH_KEY'] || ask('Mike master key: ')
 
     raven = ENV['RAVEN_DSN'] || ask('Sentry key: ')
@@ -163,8 +161,7 @@ namespace :bootstrap do
         "MIKE_AUTH_KEY=#{mikekey}",
         "ADMIN_NAME=#{adminname}",
         "ADMIN_EMAIL=#{adminemail}",
-        "ADMIN_PASS=#{adminpassword}",
-        "ADMIN_KEY=#{adminkey}"
+        "ADMIN_PASS=#{adminpassword}"
       ]).flatten.compact
 
       bootstrapper = make_container('pebbles/mike', nil, opts)
@@ -177,7 +174,7 @@ namespace :bootstrap do
 
   task database: :environment do
     title "Creating system user"
-    masterkey = ENV['MIKE_AUTH_KEY'] || ask("Master API key: ")  { |q| q.echo = 'x' }
+    masterkey = ENV['MIKE_AUTH_KEY'] || SecureRandom.hex(32)
     unless Mike.system_user
       User.create!(id: Mike::SYSTEM_USER_ID, name: 'system', email: 'no_email', password: SecureRandom.hex, active: true, admin: true)
       title "Creating master API key"
@@ -193,11 +190,6 @@ namespace :bootstrap do
     user = User.create!(name: name, email: email, password: password, admin: true, active: true)
     title "Admin created"
     say "<%= color('#{user.inspect}', :yellow) %>"
-
-    title "Adding SSH key"
-    key = ENV['ADMIN_KEY'] || ask("Paste your public key in: ") { |q| q.echo = false }
-    sshkey = SshKey.create!(user: user, key: key)
-    say "<%= color('#{sshkey.fingerprint}', :yellow) %>"
 
     title "Generating admin API key"
     apikey = user.generate_api_key(Mike.system_user)

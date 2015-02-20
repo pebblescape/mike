@@ -31,7 +31,6 @@ Rails.application.routes.draw do
     end
     resources :users
 
-    get 'auth' => 'users#auth'
     post 'login' => 'users#login'
     get 'user' => 'users#whoami'
   end

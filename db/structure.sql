@@ -150,20 +150,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: ssh_keys; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE ssh_keys (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    user_id uuid,
-    key text NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    fingerprint character varying(255) NOT NULL
-);
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -219,14 +205,6 @@ ALTER TABLE ONLY dynos
 
 ALTER TABLE ONLY releases
     ADD CONSTRAINT releases_pkey PRIMARY KEY (id);
-
-
---
--- Name: ssh_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY ssh_keys
-    ADD CONSTRAINT ssh_keys_pkey PRIMARY KEY (id);
 
 
 --
@@ -315,27 +293,6 @@ CREATE INDEX index_releases_on_user_id ON releases USING btree (user_id);
 
 
 --
--- Name: index_ssh_keys_on_fingerprint; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_ssh_keys_on_fingerprint ON ssh_keys USING btree (fingerprint);
-
-
---
--- Name: index_ssh_keys_on_key; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_ssh_keys_on_key ON ssh_keys USING btree (key);
-
-
---
--- Name: index_ssh_keys_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_ssh_keys_on_user_id ON ssh_keys USING btree (user_id);
-
-
---
 -- Name: index_users_on_auth_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -416,4 +373,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141218193836');
 INSERT INTO schema_migrations (version) VALUES ('20141218194753');
 
 INSERT INTO schema_migrations (version) VALUES ('20141218200105');
+
+INSERT INTO schema_migrations (version) VALUES ('20150220222248');
 
