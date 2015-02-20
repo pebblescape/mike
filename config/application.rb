@@ -27,7 +27,7 @@ module Mike
     config.action_dispatch.rack_cache = nil
 
     config.active_record.thread_safe!
-    config.active_record.schema_format = :sql
+    # config.active_record.schema_format = :sql
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000
