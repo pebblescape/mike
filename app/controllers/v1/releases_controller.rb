@@ -7,26 +7,42 @@ class V1::ReleasesController < ApiController
   end
 
   def create
-    build = Build.create!(build_params)
-    build.user = current_user
-    build.app = @app
-    build.save
+    if params.has_key? :rollback
+      if params[:rollback]
+        find_release(params[:rollback])
+      else
+        @release = @app.releases[-2]
+      end
 
-    render json: build
+      @release = @release.rollback!
+    end
+
+    render json: @release
   end
 
   def show
     params.require(:id)
+    find_release(params[:id])
+    raise Mike::NotFound unless release
 
-    release = @app.releases.find(params[:id])
     # TODO: auth. app ownership check here
-    render json: release
+    render json: @release
   end
 
   private
 
   def fetch_app
     params.require(:app_id)
-    @app = App.find(params[:app_id])
+    @app = App.find_by_uuid_or_name(params[:app_id])
+  end
+
+  def find_release(id)
+    if id == 'current'
+      @release = @app.current_release
+    elsif id =~ /v[0-9]+/
+      @release = @app.releases.where(version: id[1..-1]).first
+    else
+      @release = @app.releases.find(id)
+    end
   end
 end

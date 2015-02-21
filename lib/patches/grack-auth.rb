@@ -49,7 +49,7 @@ module Grack
 
     def authenticate_user(login, password)
       key = ApiKey.where(key: password).includes(:user).first
-      return key.user if key.user.email == login
+      return key.user if key && key.user.email == login
 
       nil # No user was found
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150220222248) do
+ActiveRecord::Schema.define(version: 20150221200326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,11 +31,12 @@ ActiveRecord::Schema.define(version: 20150220222248) do
 
   create_table "apps", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "owner_id"
-    t.string   "name",        limit: 255,                        null: false
+    t.string   "name",               limit: 255,                        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.hstore   "config_vars",             default: {}
-    t.hstore   "formation",               default: {"web"=>"1"}
+    t.hstore   "config_vars",                    default: {}
+    t.hstore   "formation",                      default: {"web"=>"1"}
+    t.uuid     "current_release_id"
   end
 
   add_index "apps", ["name"], name: "index_apps_on_name", using: :btree
@@ -81,6 +82,7 @@ ActiveRecord::Schema.define(version: 20150220222248) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.hstore   "config_vars",             default: {}
+    t.integer  "version",                 default: 1
   end
 
   add_index "releases", ["app_id"], name: "index_releases_on_app_id", using: :btree

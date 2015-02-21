@@ -19,6 +19,7 @@ class Dyno < ActiveRecord::Base
   before_destroy do |dyno|
     return unless dyno.proctype == "web"
     Router.remove_dyno(self)
+    true
   end
 
   before_destroy do

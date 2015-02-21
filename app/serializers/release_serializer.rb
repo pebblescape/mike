@@ -1,5 +1,5 @@
 class ReleaseSerializer < ApplicationSerializer
-  attributes :id, :app, :user, :build, :version, :description, :config_vars, :name
+  attributes :id, :app, :user, :build, :version, :description, :config_vars, :name, :created_at, :addons
 
   def name
     "v#{object.version}"
@@ -24,6 +24,12 @@ class ReleaseSerializer < ApplicationSerializer
       id: object.build.id,
       commit: object.build.commit,
       status: Build.status_types[object.build.status]
+    }
+  end
+
+  def addons
+    {
+
     }
   end
 end

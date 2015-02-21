@@ -80,7 +80,7 @@ end
 #  status                :integer          not null
 #  buildpack_description :string(255)
 #  commit                :string(255)
-#  process_types         :hstore           default({})
+#  process_types         :hstore           default("")
 #  size                  :integer
 #  created_at            :datetime
 #  updated_at            :datetime

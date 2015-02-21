@@ -140,8 +140,8 @@ end
 #  password_hash :string(64)
 #  salt          :string(32)
 #  auth_token    :string(32)
-#  admin         :boolean          default(FALSE), not null
-#  active        :boolean          default(FALSE), not null
+#  admin         :boolean          default("false"), not null
+#  active        :boolean          default("false"), not null
 #  created_at    :datetime
 #  updated_at    :datetime
 #

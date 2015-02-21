@@ -1,4 +1,6 @@
 class V1::AppsController < ApiController
+  before_filter :fetch_app, only: [:show, :destroy]
+
   def index
     apps = current_user.apps
     render json: apps
@@ -26,26 +28,26 @@ class V1::AppsController < ApiController
   end
 
   def show
-    params.require(:id)
-
-    app = App.find_by_uuid_or_name(params[:id])
-    raise Mike::NotFound unless app
+    raise Mike::NotFound unless @app
     # TODO: auth. app ownership check here
-    render json: app
+    render json: @app
   end
 
   def destroy
-    params.require(:id)
-    app = App.find_by_uuid_or_name(params[:id])
-    raise Mike::NotFound unless app
+    raise Mike::NotFound unless @app
 
     # TODO: auth. app ownership check here
-    app.destroy
+    @app.destroy
 
-    render json: app
+    render json: @app
   end
 
   private
+
+  def fetch_app
+    params.require(:id)
+    @app = App.find_by_uuid_or_name(params[:id])
+  end
 
   def app_params
     params.require(:app).permit(:name, :config_vars)
