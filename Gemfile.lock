@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/pebblescape/grack.git
-  revision: 4f3b6e3501c4a8c6584e1baa85672a33ade6307d
+  revision: 1478e1660ac744e33d62ab34a0414a1de702572d
   specs:
     gitlab-grack (2.0.0.pre)
       rack (>= 1.5.1)
@@ -326,7 +326,7 @@ GEM
       rack
       raindrops (~> 0.7)
     vcr (2.9.3)
-    versionist (1.4.0)
+    versionist (1.4.1)
       activesupport (>= 3)
       railties (>= 3)
       yard (~> 0.7)
