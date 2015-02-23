@@ -82,7 +82,8 @@ module Grack
 
     def receiver_path
       mefile = Pathname.new(__FILE__).realpath
-      File.expand_path("../../../receiver", mefile)
+      path = File.expand_path("../../../receiver", mefile)
+      Mike.deployed? ? "/scripts/run run #{path}" : path
     end
 
     def prereceivehook

@@ -56,6 +56,10 @@ module Mike
     { url: $redis.url, namespace: 'sidekiq' }
   end
 
+  def self.deployed?
+    File.realpath(Rails.root) == "/app"
+  end
+
   def self.repo_path
     path = Rails.env.development? ? File.join(Rails.root, 'tmp', 'repos') : '/tmp/pebble-repos'
     FileUtils.mkdir_p(path, mode: 0755)
