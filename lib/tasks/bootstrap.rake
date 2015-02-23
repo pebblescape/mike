@@ -82,7 +82,6 @@ namespace :bootstrap do
 
     pubip = ENV['HOSTIP'] || ask('Host IP: ')
     port = ENV['PORT'] || ask('Mike port: ')
-    mikekey = ENV['MIKE_AUTH_KEY'] || ask('Mike master key: ')
 
     raven = ENV['RAVEN_DSN'] || ask('Sentry key: ')
     skylight = ENV['SKYLIGHT_AUTHENTICATION'] || ask('Skylight key: ')
@@ -156,7 +155,6 @@ namespace :bootstrap do
       topic "Bootstrapping database"
       opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
       opts[:env].concat([
-        "MIKE_AUTH_KEY=#{mikekey}",
         "ADMIN_NAME=#{adminname}",
         "ADMIN_EMAIL=#{adminemail}",
         "ADMIN_PASS=#{adminpassword}"
