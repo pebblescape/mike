@@ -32,14 +32,18 @@ class Receiver
   end
 
   def push
-    @cid = run!("docker run -i -a stdin -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build").gsub("\n", "")
+    envvars = app['config_vars'].map{ |k,v| "-e #{k}=#{v}" }.join(" ")
+    @cid = run!("docker run -i -a stdin #{envvars} -v #{cache_path}:/tmp/cache:rw pebbles/pebblerunner build").gsub("\n", "")
     pipe!("docker attach #{cid}", no_indent: true)
+    newline
 
     @release = post_push(app, commit, cid)
-    # @build = release['build']
     assert(release.is_a?(Hash), "Release failed: #{release}")
 
-    topic "Release v#{release['version']} deployed"
+    topic "Launching v#{release['version']}"
+    puts "urlhere deployed to Pebblescape"
+
+    newline
   end
 
   def assert(value, message="Assertion failed")

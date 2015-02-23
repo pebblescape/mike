@@ -88,7 +88,7 @@ module Grack
     def prereceivehook
       "#!/bin/bash
 set -eo pipefail; while read oldrev newrev refname; do
-[[ $refname = \"refs/heads/master\" ]] && git archive $newrev | #{receiver_path} \"#{app.name}\" \"$newrev\" | sed -$([[ $(uname) == \"Darwin\" ]] && echo l || echo u) \"s/^/\"$'\\e[1G\\e[K'\"/\"
+[[ $refname = \"refs/heads/master\" ]] && git archive $newrev | #{receiver_path} \"#{app.name}\" \"$newrev\"
 done"
     end
 

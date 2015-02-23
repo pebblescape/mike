@@ -48,7 +48,8 @@ class Build < ActiveRecord::Base
 
       # TODO: get default env vars
       parsed = JSON.parse(info[0][0])
-      build.process_types = parsed['process_types'].inject(&:merge)
+      proctypes = parsed['process_types']
+      build.process_types = proctypes.is_a?(Hash) ? proctypes : proctypes.inject(&:merge)
       build.size = parsed['app_size']
       build.buildpack_description = parsed['buildpack_name']
       build.status = status_types[:succeeded]

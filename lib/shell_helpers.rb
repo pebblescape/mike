@@ -135,6 +135,11 @@ module ShellHelpers
     $stdout.flush
   end
 
+  def newline
+    Kernel.puts ""
+    $stdout.flush
+  end
+
   def warn(message, options = {})
     if options.key?(:inline) ? options[:inline] : false
       topic "Warning:"

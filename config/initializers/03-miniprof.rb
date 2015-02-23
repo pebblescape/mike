@@ -21,7 +21,8 @@ if defined?(Rack::MiniProfiler)
     (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Nexus 7|Android/) &&
     (env['PATH_INFO'] !~ /assets/) &&
     (env['PATH_INFO'] !~ /__better_errors/) &&
-    (env['PATH_INFO'] !~ /sidekiq/)
+    (env['PATH_INFO'] !~ /sidekiq/) &&
+    (env['PATH_INFO'] !~ /^\/[\w\.]+\.git\//)
   end
 
   Rack::MiniProfiler.config.position = 'right'

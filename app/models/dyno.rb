@@ -55,6 +55,7 @@ class Dyno < ActiveRecord::Base
       'Image' => release.build.image_id,
       'Cmd'   => ["start", proctype],
       'Env'   => config.concat(["PORT=#{port}"]),
+      'User'  => 'app',
       'HostConfig' => {
         'RestartPolicy' => { "Name": "always", "MaximumRetryCount": 10 }
       }
