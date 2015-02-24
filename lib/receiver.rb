@@ -41,7 +41,7 @@ class Receiver
     assert(release.is_a?(Hash), "Release failed: #{release}")
 
     topic "Launching v#{release['version']}"
-    puts "urlhere deployed to Pebblescape"
+    puts "#{app['web_url']} deployed to Pebblescape"
 
     newline
   end

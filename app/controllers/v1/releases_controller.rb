@@ -23,7 +23,7 @@ class V1::ReleasesController < ApiController
   def show
     params.require(:id)
     find_release(params[:id])
-    raise Mike::NotFound unless release
+    raise Mike::NotFound unless @release
 
     # TODO: auth. app ownership check here
     render json: @release

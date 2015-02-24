@@ -68,12 +68,14 @@ module Grack
 
     def ensure_repo
       path = File.join(Mike.repo_path, "#{app.name}.git")
-      return if File.exist?(path)
 
-      FileUtils.mkdir_p(path, mode: 0755)
-      FileUtils.chdir(path) do
-        `git init --bare`
+      unless File.exist?(path)
+        FileUtils.mkdir_p(path, mode: 0755)
+        FileUtils.chdir(path) do
+          `git init --bare`
+        end
       end
+
       File.open(File.join(path, "hooks", "pre-receive"), "w") do |io|
         io.write prereceivehook
       end
@@ -83,7 +85,7 @@ module Grack
     def receiver_path
       mefile = Pathname.new(__FILE__).realpath
       path = File.expand_path("../../../receiver", mefile)
-      Mike.deployed? ? "/scripts/run run #{path}" : path
+      Mike.deployed? ? "/scripts/run receiver #{path}" : path
     end
 
     def prereceivehook
