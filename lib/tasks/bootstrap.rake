@@ -10,6 +10,10 @@ namespace :bootstrap do
     say "<%= color('#{msg}', :green) %>"
   end
 
+  def fail(msg)
+    say "<%= color('#{msg}', :red) %>"
+  end
+
   def preload_image(name)
     unless Docker::Image.exist?(name)
       title "Preloading #{name}"
@@ -145,25 +149,23 @@ namespace :bootstrap do
     make_container('pebbles/mike', 'mike', mike_opts.merge(cmd: ["start", "web"], ports: {"#{port}" => '5000'})).start
     make_container('pebbles/mike', 'mike-worker', mike_opts.merge(cmd: ["start", "worker"])).start
 
-    if bootstrap
-      topic "Loading schema"
-      migrator = make_container('pebbles/mike', nil,
-        mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
-      migrator.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
-      migrator.delete(force: true)
+    topic "Loading schema"
+    migrator = make_container('pebbles/mike', nil,
+      mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
+    migrator.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
+    migrator.delete(force: true)
 
-      topic "Bootstrapping database"
-      opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
-      opts[:env].concat([
-        "ADMIN_NAME=#{adminname}",
-        "ADMIN_EMAIL=#{adminemail}",
-        "ADMIN_PASS=#{adminpassword}"
-      ]).flatten.compact
+    topic "Bootstrapping database"
+    opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
+    opts[:env].concat([
+      "ADMIN_NAME=#{adminname}",
+      "ADMIN_EMAIL=#{adminemail}",
+      "ADMIN_PASS=#{adminpassword}"
+    ]).flatten.compact
 
-      bootstrapper = make_container('pebbles/mike', nil, opts)
-      bootstrapper.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
-      bootstrapper.delete(force: true)
-    end
+    bootstrapper = make_container('pebbles/mike', nil, opts)
+    bootstrapper.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
+    bootstrapper.delete(force: true)
   end
 
   task database: :environment do
@@ -188,5 +190,67 @@ namespace :bootstrap do
     title "Generating admin API key"
     apikey = user.generate_api_key(Mike.system_user)
     say "<%= color('#{apikey.key}', :yellow) %>"
+  end
+
+  task upgrade: :environment do
+    existing = Docker::Container.all(all: true)
+    mike = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/mike") }.first
+    worker = existing.select { |c| c.info["Names"] && c.info["Names"].include?("/mike-worker") }.first
+
+    unless mike && worker
+      fail("Mike or Mike worker not found!")
+      next
+    end
+
+    title "Pulling latest images"
+    pipe!("docker pull pebbles/mike")
+    pipe!("docker pull pebbles/pebblerunner")
+
+    title "Removing current containers"
+    [mike, worker].each do |cnt|
+      cnt.stop
+      cnt.wait(10)
+      cnt.delete(force: true)
+    end
+
+    title "Booting new versions"
+
+    dbpass = ENV['DBPASS'] || ask('Database password: ') { |q| q.echo = 'x' }
+    port = ENV['PORT'] || ask('Mike port: ')
+
+    raven = ENV['RAVEN_DSN'] || ask('Sentry key: ')
+    skylight = ENV['SKYLIGHT_AUTHENTICATION'] || ask('Skylight key: ')
+
+    dbname = 'mike'
+
+    mike_opts = {
+      restart: true,
+      volumes: {'/var/run/docker.sock' => '/var/run/docker.sock'},
+      volumes_from: ['mike-volume'],
+      env: [
+        "PORT=5000",
+        "DATABASE_URL=postgres://#{dbname}:#{dbpass}@db/#{dbname}",
+        "REDIS_URL=redis://redis:6379",
+        "DBPASS=#{dbpass}",
+        "DBUSER=#{dbname}",
+        "DBNAME=#{dbname}",
+        "ETCD_HOST=etcd",
+        "RAVEN_DSN=#{raven}",
+        "SKYLIGHT_AUTHENTICATION=#{skylight}"
+      ], links: {
+        "mike-postgres" => "db",
+        "mike-redis" => "redis",
+        "mike-etcd" => "etcd"
+      }
+    }
+
+    make_container('pebbles/mike', 'mike', mike_opts.merge(cmd: ["start", "web"], ports: {"#{port}" => '5000'})).start
+    make_container('pebbles/mike', 'mike-worker', mike_opts.merge(cmd: ["start", "worker"])).start
+
+    topic "Migrating DB"
+    migrator = make_container('pebbles/mike', nil,
+      mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:migrate"], restart: false))
+    migrator.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
+    migrator.delete(force: true)
   end
 end
