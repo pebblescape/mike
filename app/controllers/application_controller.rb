@@ -7,20 +7,16 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :null_session
 
-  before_filter :authorize_mini_profiler
-  before_filter :redirect_to_login_if_required
-
   rescue_from Mike::NotLoggedIn, Mike::InvalidAccess do |e|
     raise e if Rails.env.test?
     json_error(403, 'not_logged_in')
   end
 
   rescue_from Mike::NotFound do
-    rescue_mike_actions("not_found", 404)
+    json_error(404, 'not_found')
   end
 
   rescue_from RateLimiter::LimitExceeded do |e|
-
     time_left = ""
     if e.available_in < 1.minute.to_i
       time_left = I18n.t("rate_limiter.seconds", count: e.available_in)
@@ -37,43 +33,7 @@ class ApplicationController < ActionController::Base
     render json: {error: e.message.gsub(/^Validation failed: /, '')}, status: 422
   end
 
-  def handle_unverified_request
-    # NOTE: API key is secret, having it invalidates the need for a CSRF token
-    unless is_api?
-      super
-      clear_current_user
-      json_error(403, 'bad_csrf')
-    end
-  end
-
   private
-
-  def rescue_mike_actions(message, error)
-    if request.format && request.format.json?
-      json_error(error, message)
-    else
-      render text: build_not_found_page(error)
-    end
-  end
-
-  def build_not_found_page(status=404)
-    render_to_string status: status, formats: [:html], template: '/exceptions/not_found'
-  end
-
-  def mini_profiler_enabled?
-    defined?(Rack::MiniProfiler)
-  end
-
-  def authorize_mini_profiler
-    return unless mini_profiler_enabled?
-    Rack::MiniProfiler.authorize_request
-  end
-
-  def redirect_to_login_if_required
-    return if current_user
-
-    redirect_to :login
-  end
 
   def ensure_logged_in
     raise Mike::NotLoggedIn.new unless current_user.present?

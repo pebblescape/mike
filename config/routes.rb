@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     receive_pack: true
   }), at: '/', constraints: lambda { |request| /^\/[\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
 
-  api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.pebblescape+json; version=1"}) do
+  api_version(:module => "V1", :path => {:value => "api"}, :header => {:name => "Accept", :value => "application/vnd.pebblescape+json; version=1"}) do
     resources :apps do
       resources :builds
       resources :releases, only: [:index, :show, :create]
@@ -35,14 +35,5 @@ Rails.application.routes.draw do
     get 'user' => 'users#whoami'
   end
 
-  resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy, :become] do
-    collection do
-      post "forgot_password"
-    end
-  end
-
-  get "session/current" => "session#current"
-  get "session/csrf" => "session#csrf"
-
-  root "apps#index"
+  root "landing#index"
 end

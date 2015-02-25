@@ -9,18 +9,24 @@ class V1::UsersController < ApiController
     RateLimiter.new(nil, "login-hr-#{request.remote_ip}", 30, 1.hour).performed!
     RateLimiter.new(nil, "login-min-#{request.remote_ip}", 6, 1.minute).performed!
 
-    params.require(:username)
-    params.require(:password)
+    if params[:user]
+      params.require(:user).permit(:email, :password)
+      username = params[:user][:email]
+      password = params[:user][:password]
+    else
+      username = params.require(:username)
+      password = params.require(:password)
+    end
 
-    return invalid_credentials if params[:password].length > User.max_password_length
+    return invalid_credentials if password.length > User.max_password_length
 
-    login = params[:username].strip
+    login = username.strip
     login = login[1..-1] if login[0] == "@"
 
     if user = User.find_by_email(login)
 
       # If their password is correct
-      unless user.confirm_password?(params[:password])
+      unless user.confirm_password?(password)
         invalid_credentials
         return
       end
@@ -29,7 +35,7 @@ class V1::UsersController < ApiController
       return
     end
 
-    render json: { api_key: user.api_key.key }
+    render json: { api_key: user.api_key.key, email: user.email }
   end
 
   private

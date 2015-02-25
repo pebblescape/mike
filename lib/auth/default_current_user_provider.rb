@@ -1,12 +1,12 @@
 require_dependency "auth/current_user_provider"
 
 class Auth::DefaultCurrentUserProvider
+  TOKEN_KEY = 'api_key='
+  TOKEN_REGEX = /^Token /
+  AUTHN_PAIR_DELIMITERS = /(?:,|;|\t+)/
 
   CURRENT_USER_KEY ||= "_MIKE_CURRENT_USER".freeze
   API_KEY ||= "api_key".freeze
-  API_KEY_ENV ||= "_MIKE_API".freeze
-  TOKEN_COOKIE ||= "_t".freeze
-  PATH_INFO ||= "PATH_INFO".freeze
 
   # do all current user initialization here
   def initialize(env)
@@ -19,59 +19,80 @@ class Auth::DefaultCurrentUserProvider
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
 
     request = @request
-
-    auth_token = request.cookies[TOKEN_COOKIE]
-
     current_user = nil
-
-    if auth_token && auth_token.length == 32
-      current_user = User.find_by(auth_token: auth_token)
-    end
 
     if current_user && !current_user.active
       current_user = nil
     end
 
+    token, options = token_and_options
+    if authorization
+      current_user = lookup_api_user(token, options['email'])
+      raise Mike::InvalidAccess unless current_user
+    end
+
     # possible we have an api call, impersonate
     if api_key = request[API_KEY]
-      current_user = lookup_api_user(api_key, request)
+      current_user = lookup_api_user(api_key, request["api_login"])
       raise Mike::InvalidAccess unless current_user
-      @env[API_KEY_ENV] = true
     end
 
     @env[CURRENT_USER_KEY] = current_user
   end
 
   def log_on_user(user, session, cookies)
-    unless user.auth_token && user.auth_token.length == 32
-      user.auth_token = SecureRandom.hex(16)
-      user.save!
-    end
-    cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
     @env[CURRENT_USER_KEY] = user
   end
 
-  def log_off_user(session, cookies)
-    cookies[TOKEN_COOKIE] = nil
+  private
+
+  def token_and_options
+    authorization_request = authorization.to_s
+    if authorization_request[TOKEN_REGEX]
+      params = token_params_from authorization_request
+      [params.shift[1], Hash[params].with_indifferent_access]
+    end
   end
 
-  # api has special rights return true if api was detected
-  def is_api?
-    current_user
-    @env[API_KEY_ENV]
+  def token_params_from(auth)
+    rewrite_param_values params_array_from raw_params auth
   end
 
-  def has_auth_cookie?
-    cookie = @request.cookies[TOKEN_COOKIE]
-    !cookie.nil? && cookie.length == 32
+  # Takes raw_params and turns it into an array of parameters
+  def params_array_from(raw_params)
+    raw_params.map { |param| param.split %r/=(.+)?/ }
+  end
+
+  # This removes the <tt>"</tt> characters wrapping the value.
+  def rewrite_param_values(array_params)
+    array_params.each { |param| (param[1] || "").gsub! %r/^"|"$/, '' }
+  end
+
+  # This method takes an authorization body and splits up the key-value
+  # pairs by the standardized <tt>:</tt>, <tt>;</tt>, or <tt>\t</tt>
+  # delimiters defined in +AUTHN_PAIR_DELIMITERS+.
+  def raw_params(auth)
+    _raw_params = auth.sub(TOKEN_REGEX, '').split(/\s*#{AUTHN_PAIR_DELIMITERS}\s*/)
+
+    if !(_raw_params.first =~ %r{\A#{TOKEN_KEY}})
+      _raw_params[0] = "#{TOKEN_KEY}#{_raw_params.first}"
+    end
+
+    _raw_params
+  end
+
+  def authorization
+    @env['HTTP_AUTHORIZATION']   ||
+    @env['X-HTTP_AUTHORIZATION'] ||
+    @env['X_HTTP_AUTHORIZATION'] ||
+    @env['REDIRECT_X_HTTP_AUTHORIZATION']
   end
 
   protected
 
-  def lookup_api_user(api_key_value, request)
+  def lookup_api_user(api_key_value, api_login)
     api_key = ApiKey.where(key: api_key_value).includes(:user).first
     if api_key
-      api_login = request["api_login"]
       if api_key.user
         api_key.user if !api_login || (api_key.user.email == api_login.downcase)
       elsif api_login
