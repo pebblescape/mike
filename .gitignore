@@ -18,3 +18,5 @@
 spec/reports
 /public/assets
 coverage/
+
+vendor/bundle

@@ -31,6 +31,8 @@ Rails.application.routes.draw do
     end
     resources :users
 
+    post 'admin/upgrade' => 'admin#upgrade'
+
     post 'login' => 'users#login'
     get 'user' => 'users#whoami'
   end
