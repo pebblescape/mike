@@ -31,7 +31,6 @@ gem 'docker-api'
 gem 'highline'
 gem 'etcd'
 gem 'gitlab-grack', github: 'pebblescape/grack', require: 'grack'
-gem 'pretty_backtrace'
 
 # DEV & TEST
 group :test, :development do
