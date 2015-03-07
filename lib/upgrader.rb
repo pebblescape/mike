@@ -37,14 +37,14 @@ class Upgrader
     run("bundle exec rake assets:precompile")
     percent(75)
 
-    # sidekiq_pid = `ps aux | grep sidekiq.*busy | grep -v grep | awk '{ print $2 }'`.strip.to_i
-    # if sidekiq_pid > 0
-    #   Process.kill("TERM", sidekiq_pid)
-    #   log("Killed sidekiq")
-    # else
-    #   log("Warning: Sidekiq was not found")
-    # end
-    # percent(100)
+    sidekiq_pid = `ps aux | grep sidekiq.*busy | grep -v grep | awk '{ print $2 }'`.strip.to_i
+    if sidekiq_pid > 0
+      Process.kill("TERM", sidekiq_pid)
+      log("Killed sidekiq")
+    else
+      log("Warning: Sidekiq was not found")
+    end
+    percent(100)
 
     publish('status', 'complete')
     pidpath = Rails.root.join("tmp/puma.pid")
