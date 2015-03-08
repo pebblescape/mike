@@ -27,6 +27,8 @@ class Upgrader
     log("********************************************************")
     percent(5)
 
+    run("pwd")
+    run("bundle config")
     run("bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment")
     percent(25)
 
