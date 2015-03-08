@@ -14,12 +14,12 @@ class Bootstrapper
   def bootstrap
     set_opts
 
-    refresh_image('pebbles/pebblerunner')
-    refresh_image('pebbles/mike')
-    refresh_image('redis')
-    refresh_image('postgres')
-    refresh_image('busybox')
-    refresh_image('quay.io/coreos/etcd:v2.0.0')
+    # refresh_image('pebbles/pebblerunner')
+    # refresh_image('pebbles/mike')
+    # refresh_image('redis')
+    # refresh_image('postgres')
+    # refresh_image('busybox')
+    # refresh_image('quay.io/coreos/etcd:v2.0.0')
 
     title "Removing existing"
     %w(mike mike-redis mike-postgres mike-etcd mike-data-volume mike-volume).each do |name|
@@ -63,12 +63,12 @@ class Bootstrapper
 
     title "Loading schema"
     migrator = make_container('pebbles/mike', nil,
-      mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
+      mike_opts.merge(entrypoint: '/scripts/run', cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
     migrator.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
     migrator.delete(force: true)
 
     title "Bootstrapping database"
-    opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
+    opts = mike_opts.merge(entrypoint: '/scripts/run', cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
     opts[:env].concat([
       "ADMIN_NAME=#{adminname}",
       "ADMIN_EMAIL=#{adminemail}",
@@ -190,6 +190,7 @@ class Bootstrapper
       end
 
       apiopts['Cmd'] = options.delete(:cmd) || []
+      apiopts['Entrypoint'] = options.delete(:entrypoint) || nil
       apiopts['User'] = options.delete(:user) || ''
       apiopts['HostConfig']['VolumesFrom'] = options.delete(:volumes_from) || []
 

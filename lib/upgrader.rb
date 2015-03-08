@@ -27,14 +27,15 @@ class Upgrader
     log("********************************************************")
     percent(5)
 
-    run("bundle install --deployment --without test --without development")
+    run("/scripts/run run env")
+    run("/scripts/run run bundle install --deployment --without test --without development")
     percent(25)
 
-    run("bundle exec rake db:migrate")
+    run("/scripts/run run bundle exec rake db:migrate")
     percent(50)
 
     log("***  Bundling assets. This might take a while *** ")
-    run("bundle exec rake assets:precompile")
+    run("/scripts/run run bundle exec rake assets:precompile")
     percent(75)
 
     sidekiq_pid = `ps aux | grep sidekiq.*busy | grep -v grep | awk '{ print $2 }'`.strip.to_i
