@@ -31,6 +31,7 @@ gem 'docker-api'
 gem 'highline'
 gem 'etcd'
 gem 'gitlab-grack', github: 'pebblescape/grack', require: 'grack'
+gem 'message_bus'
 
 # DEV & TEST
 group :test, :development do

@@ -33,7 +33,7 @@ Rails.application.routes.draw do
 
     post 'admin/upgrade' => 'admin#upgrade'
     post 'admin/reset_upgrade' => 'admin#reset_upgrade'
-    get 'admin/repo' => 'admin#repo'
+    get 'admin/gitinfo' => 'admin#gitinfo'
     get 'admin/progress' => 'admin#progress'
     get 'admin/ps' => 'admin#ps'
 

@@ -2,7 +2,7 @@ require_dependency 'git_repo'
 require_dependency 'upgrader'
 
 class V1::AdminController < ApiController
-  def repo
+  def gitinfo
     result = {name: repo.name, path: repo.path, branch: repo.branch }
 
     if repo.valid?
@@ -49,7 +49,7 @@ class V1::AdminController < ApiController
     if RUBY_PLATFORM =~ /darwin/
       ps_output = `ps aux -m`
     else
-      ps_output = `ps aux --sort -rss`
+      ps_output = `ps auxf --sort -rss`
     end
     render text: ps_output
   end

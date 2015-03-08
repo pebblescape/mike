@@ -69,7 +69,7 @@ class Upgrader
   end
 
   def publish(type, value)
-    # MessageBus.publish("/docker/upgrade", {type: type, value: value}, user_ids: [@user_id])
+    MessageBus.publish("/admin/upgrade", {type: type, value: value}, user_ids: [@user_id])
   end
 
   def run(cmd)
