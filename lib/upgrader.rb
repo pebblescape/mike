@@ -27,7 +27,6 @@ class Upgrader
     log("********************************************************")
     percent(5)
 
-    run("/scripts/run run env")
     run("/scripts/run run bundle install --deployment --without test --without development")
     percent(25)
 
