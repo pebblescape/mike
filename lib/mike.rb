@@ -41,9 +41,9 @@ module Mike
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
-    MessageBus.after_fork
     $redis.reconnect
     Rails.cache.reconnect
+    MessageBus.after_fork
     # shuts down all connections in the pool
     Sidekiq.redis_pool.shutdown{|c| nil}
     # re-establish
