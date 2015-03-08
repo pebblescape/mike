@@ -27,14 +27,14 @@ class Upgrader
     log("********************************************************")
     percent(5)
 
-    run("/scripts/run run bundle install --deployment --without test --without development")
+    run("bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment")
     percent(25)
 
-    run("/scripts/run run bundle exec rake db:migrate")
+    run("bundle exec rake db:migrate")
     percent(50)
 
     log("***  Bundling assets. This might take a while *** ")
-    run("/scripts/run run bundle exec rake assets:precompile")
+    run("bundle exec rake assets:precompile")
     percent(75)
 
     sidekiq_pid = `ps aux | grep sidekiq.*busy | grep -v grep | awk '{ print $2 }'`.strip.to_i
@@ -75,11 +75,7 @@ class Upgrader
   def run(cmd)
     log "$ #{cmd}"
     msg = ""
-    clear_env = Hash[*ENV.map{|k,v| [k,nil]}
-                     .reject{ |k,v|
-                       ["PWD","HOME","SHELL","PATH"].include?(k)
-                     }
-                     .flatten]
+    clear_env = Hash[*ENV.map{|k,v| [k,nil]}.flatten]
     clear_env["RAILS_ENV"] = "production"
     clear_env["TERM"] = 'dumb' # claim we have a terminal
 
