@@ -32,6 +32,10 @@ Rails.application.routes.draw do
     resources :users
 
     post 'admin/upgrade' => 'admin#upgrade'
+    post 'admin/reset_upgrade' => 'admin#reset_upgrade'
+    get 'admin/repo' => 'admin#repo'
+    get 'admin/progress' => 'admin#progress'
+    get 'admin/ps' => 'admin#ps'
 
     post 'login' => 'users#login'
     get 'user' => 'users#whoami'
