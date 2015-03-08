@@ -7,6 +7,5 @@ if defined?(Spring)
   Spring.after_fork do
     Mike.after_fork
   end
-  Spring::Commands::Cucumber.environment_matchers[/^.*/] = "test"
   Spring::Commands::Rake.environment_matchers["spec"] = "test"
 end
