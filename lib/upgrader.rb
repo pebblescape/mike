@@ -27,8 +27,6 @@ class Upgrader
     log("********************************************************")
     percent(5)
 
-    run("pwd")
-    run("bundle config")
     run("bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment")
     percent(25)
 
@@ -56,7 +54,7 @@ class Upgrader
       log("*** After restart, upgrade will be complete ***")
       log("***********************************************")
       log("Restarting puma pid: #{pid}")
-      Process.kill("USR2", pid.to_i)
+      Process.kill("USR1", pid.to_i)
       log("DONE")
     else
       log("Did not find puma master")

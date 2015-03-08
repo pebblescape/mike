@@ -5,8 +5,8 @@ workers "#{num_workers}"
 threads 8,32
 
 pidfile "#{APP_ROOT}/tmp/puma.pid"
-preload_app!
+# preload_app!
 
-on_worker_boot do
-  $redis.client.reconnect
-end
+# on_worker_boot do
+#   $redis.client.reconnect
+# end
