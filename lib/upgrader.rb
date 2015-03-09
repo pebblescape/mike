@@ -79,12 +79,18 @@ class Upgrader
   def run(cmd)
     log "$ #{cmd}"
     msg = ""
-    env = ENV.to_h.dup
-    env["RAILS_ENV"] = "production"
-    env["TERM"] = 'dumb' # claim we have a terminal
+    clean_env = Hash[*ENV.map{|k,v| [k,nil]}
+                     .reject{ |k,v|
+                       ["PWD","HOME","SHELL","PATH", "PORT"].include?(k) ||
+                         k =~ /^REDIS_/ ||
+                         k =~ /^DB_/
+                     }
+                     .flatten]
+    clean_env["RAILS_ENV"] = "production"
+    clean_env["TERM"] = 'dumb' # claim we have a terminal
 
     retval = nil
-    Open3.popen2e(env, "cd #{Rails.root} && chpst -u app #{cmd} 2>&1") do |_in, out, wait_thread|
+    Open3.popen2e(clean_env, "cd #{Rails.root} && chpst -u app -U app #{cmd} 2>&1") do |_in, out, wait_thread|
       out.each do |line|
         line.rstrip! # the client adds newlines, so remove the one we're given
         log(line)
