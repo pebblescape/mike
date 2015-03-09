@@ -29,8 +29,6 @@ class Upgrader
     percent(5)
 
     run("env")
-    run("ruby -v")
-    run("bundle -v")
     run("bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment")
     percent(25)
 
@@ -83,7 +81,7 @@ class Upgrader
                      .reject{ |k,v|
                        ["PWD","HOME","SHELL","PATH", "PORT", "GEM_PATH", "_ORIGINAL_GEM_PATH", "GEM_HOME"].include?(k) ||
                          k =~ /^REDIS_/ ||
-                         k =~ /^DB_/
+                         k =~ /^DB/
                      }
                      .flatten]
     clean_env["RAILS_ENV"] = "production"
