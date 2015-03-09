@@ -28,7 +28,6 @@ class Upgrader
     percent(5)
 
     run("env")
-    run("ruby -v")
     run("bundle -v")
     run("bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment")
     percent(25)
@@ -78,7 +77,13 @@ class Upgrader
   def run(cmd)
     log "$ #{cmd}"
     msg = ""
-    env = ENV.to_h.dup
+    env = Hash[*ENV.map{|k,v| [k,v]}
+                     .select{ |k,v|
+                       ["HOME","SHELL","PATH", "GEM_PATH"].include?(k) ||
+                         k =~ /^REDIS_/ ||
+                         k =~ /^DB_/
+                     }
+                     .flatten]
     env["RAILS_ENV"] = "production"
     env["TERM"] = 'dumb' # claim we have a terminal
 
