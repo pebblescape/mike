@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     resources :users
 
     post 'admin/upgrade' => 'admin#upgrade'
-    delete 'admin/reset_upgrade' => 'admin#reset_upgrade'
+    delete 'admin/upgrade' => 'admin#reset_upgrade'
     get 'admin/latest' => 'admin#latest'
     get 'admin/gitinfo' => 'admin#gitinfo'
     get 'admin/progress' => 'admin#progress'
