@@ -7,7 +7,7 @@ class V1::AdminController < ApiController
 
     if repo.valid?
       result[:id] = repo.name.downcase.gsub(/[^a-z]/, '_').gsub(/_+/, '_').sub(/_$/, '')
-      result[:version] = repo.upgrading? repo.upgrade_version : repo.latest_local_commit
+      result[:version] = repo.upgrading? ? repo.upgrade_version : repo.latest_local_commit
       result[:url] = repo.url
       result[:upgrading] = repo.upgrading?
     end
