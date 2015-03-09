@@ -21,7 +21,8 @@ class Upgrader
 
     # HEAD@{upstream} is just a fancy way how to say origin/master (in normal case)
     # see http://stackoverflow.com/a/12699604/84283
-    run("cd #{@repo.path} && git fetch && git reset --hard HEAD@{upstream}")
+    run("git fetch")
+    run("git reset --hard HEAD@{upstream}")
     log("********************************************************")
     log("*** Please be patient, next steps might take a while ***")
     log("********************************************************")
