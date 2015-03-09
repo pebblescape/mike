@@ -27,8 +27,8 @@ class Build < ActiveRecord::Base
 
   def self.from_push(params, cid, app, user)
     container = Docker::Container.get(cid)
-    unless container.info["State"]["ExitCode"] == 0
-      raise Mike::BuildError, "Build failed in container #{cid}"
+    unless container.info['State']['ExitCode'] == 0
+      fail Mike::BuildError, "Build failed in container #{cid}"
     end
 
     defaults = {
@@ -59,7 +59,7 @@ class Build < ActiveRecord::Base
   end
 
   def image
-    Docker::Image.get(self.image_id)
+    Docker::Image.get(image_id)
   end
 
   def short_commit

@@ -1,7 +1,6 @@
 class EmptyWorker
   include Sidekiq::Worker
 
-  def perform(ids)
-
+  def perform
   end
 end

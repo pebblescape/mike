@@ -21,10 +21,9 @@ class V1::UsersController < ApiController
     return invalid_credentials if password.length > User.max_password_length
 
     login = username.strip
-    login = login[1..-1] if login[0] == "@"
+    login = login[1..-1] if login[0] == '@'
 
     if user = User.find_by_email(login)
-
       # If their password is correct
       unless user.confirm_password?(password)
         invalid_credentials

@@ -33,19 +33,19 @@ class App < ActiveRecord::Base
   end
 
   def set_current_release(release)
-    self.update_attribute(:current_release_id, release.id)
+    update_attribute(:current_release_id, release.id)
   end
 
   private
 
   # Mike reserves the api and git subdomains
   def check_reserved
-    !%w(api git).include?(self.name)
+    !%w(api git).include?(name)
   end
 
   def set_formation
     unless self.formation
-      self.formation = {web: 1}
+      self.formation = { web: 1 }
     end
   end
 end

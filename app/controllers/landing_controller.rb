@@ -1,3 +1,2 @@
 class LandingController < ApplicationController
-
 end

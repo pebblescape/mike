@@ -8,12 +8,12 @@ class V1::ConfigVarsController < ApiController
   def update
     config = MultiJson.load(request.body.read)
 
-    config.each do |k,v|
+    config.each do |k, v|
       @app.config_vars[k] = v
     end
 
     if @app.save
-      redeploy("Set #{config.keys.join(", ")} config var#{config.length > 1 ? 's' : ''}")
+      redeploy("Set #{config.keys.join(', ')} config var#{config.length > 1 ? 's' : ''}")
 
       render json: @app.config_vars
     else

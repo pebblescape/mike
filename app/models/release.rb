@@ -34,19 +34,19 @@ class Release < ActiveRecord::Base
   end
 
   def rollback!
-    newrelease = Release.create!({
+    newrelease = Release.create!(
       app: app,
       user: user,
       build: build,
       config_vars: config_vars,
       description: "Rollback to v#{version}"
-    })
+    )
     newrelease.deploy!
     newrelease
   end
 
   def deploy!
-    return unless self.build
+    return unless build
 
     # Schedule old dynos for deletion
     old = app.dynos.to_a
@@ -55,7 +55,7 @@ class Release < ActiveRecord::Base
     # Spin up new dynos
     app.formation.each do |type, count|
       count.to_i.times do |i|
-        proc = self.dynos.create(app: app, proctype: type, number: i)
+        proc = dynos.create(app: app, proctype: type, number: i)
       end
     end
 

@@ -12,12 +12,12 @@ class Dyno < ActiveRecord::Base
     dyno.port = 5000
     dyno.spawn
 
-    return unless dyno.proctype == "web"
+    return unless dyno.proctype == 'web'
     Router.add_dyno(self)
   end
 
   before_destroy do |dyno|
-    return unless dyno.proctype == "web"
+    return unless dyno.proctype == 'web'
     Router.remove_dyno(self)
     true
   end
@@ -48,23 +48,23 @@ class Dyno < ActiveRecord::Base
 
   def spawn
     config = {
-      "DATABASE_URL" => "sqlite3:///app/db/test.sqlite"
+      "DATABASE_URL" => 'sqlite3:///app/db/test.sqlite'
     }.merge(release.config_vars).map { |k,v| "#{k}=#{v}" }
 
     container = Docker::Container.create(
       'Image' => release.build.image_id,
-      'Cmd'   => ["start", proctype],
+      'Cmd'   => ['start', proctype],
       'Env'   => config.concat(["PORT=#{port}"]),
       'User'  => 'app',
       'HostConfig' => {
-        'RestartPolicy' => { "Name": "always", "MaximumRetryCount": 10 }
+        'RestartPolicy' => { 'Name': 'always', 'MaximumRetryCount': 10 }
       }
     ).start
 
     self.container_id = container.id
-    self.ip_address = container.json["NetworkSettings"]["IPAddress"]
+    self.ip_address = container.json['NetworkSettings']['IPAddress']
 
-    save! if !new_record?
+    save! unless new_record?
   end
 
   def kill

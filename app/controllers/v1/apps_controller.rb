@@ -28,13 +28,13 @@ class V1::AppsController < ApiController
   end
 
   def show
-    raise Mike::NotFound unless @app
+    fail Mike::NotFound unless @app
     # TODO: auth. app ownership check here
     render json: @app
   end
 
   def destroy
-    raise Mike::NotFound unless @app
+    fail Mike::NotFound unless @app
 
     # TODO: auth. app ownership check here
     @app.destroy

@@ -7,7 +7,7 @@ class V1::ReleasesController < ApiController
   end
 
   def create
-    if params.has_key? :rollback
+    if params.key? :rollback
       if params[:rollback]
         find_release(params[:rollback])
       else
@@ -23,7 +23,7 @@ class V1::ReleasesController < ApiController
   def show
     params.require(:id)
     find_release(params[:id])
-    raise Mike::NotFound unless @release
+    fail Mike::NotFound unless @release
 
     # TODO: auth. app ownership check here
     render json: @release

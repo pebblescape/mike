@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
 
   before_save :ensure_password_is_hashed
 
-  EMAIL = %r{([^@]+)@([^\.]+)}
+  EMAIL = /([^@]+)@([^\.]+)/
 
   def self.new_from_params(params)
     user = User.new
@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
   end
 
   def downcase_email
-    self.email = self.email.downcase if self.email
+    self.email = email.downcase if email
   end
 
   def password_validator
@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
     end
 
     return false unless password_hash && salt
-    self.password_hash == hash_password(password, salt)
+    password_hash == hash_password(password, salt)
   end
 
   def self.gravatar_template(email)
@@ -96,7 +96,7 @@ class User < ActiveRecord::Base
   end
 
   def revoke_api_key
-    ApiKey.where(user_id: self.id).delete_all
+    ApiKey.where(user_id: id).delete_all
   end
 
   def password=(password)

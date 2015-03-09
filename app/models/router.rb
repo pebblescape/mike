@@ -1,20 +1,18 @@
 class Router
   def self.add_dyno(dyno)
-    client.set(make_key(dyno.app, "endpoints", dyno.ip_address), value: dyno.server)
+    client.set(make_key(dyno.app, 'endpoints', dyno.ip_address), value: dyno.server)
   end
 
   def self.remove_dyno(dyno)
-    client.delete(make_key(dyno.app, "endpoints", dyno.ip_address))
+    client.delete(make_key(dyno.app, 'endpoints', dyno.ip_address))
   rescue Etcd::KeyNotFound
   end
 
   def self.sync_app(app)
-    client.set(make_key(app, "hostname"), value: app.hostname)
-    # client.set(make_key(app, "ssl"), value: true)
-    # client.set(make_key(app, "sslforce"), value: true)
+    client.set(make_key(app, 'hostname'), value: app.hostname)
+    # client.set(make_key(app, 'ssl'), value: true)
+    # client.set(make_key(app, 'sslforce'), value: true)
   end
-
-  private
 
   def self.client
     Etcd.client(host: ENV['ETCD_HOST'] || 'localhost', port: 4001)
@@ -25,6 +23,6 @@ class Router
   end
 
   def self.make_key(app, *elements)
-    ([app_key(app)] << elements).join("/")
+    ([app_key(app)] << elements).join('/')
   end
 end

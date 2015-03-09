@@ -2,6 +2,6 @@ class PushSerializer < ReleaseSerializer
   attributes :url
 
   def url
-    "fake"
+    'fake'
   end
 end
