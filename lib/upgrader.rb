@@ -81,7 +81,7 @@ class Upgrader
     msg = ""
     clean_env = Hash[*ENV.map{|k,v| [k,nil]}
                      .reject{ |k,v|
-                       ["PWD","HOME","SHELL","PATH", "PORT"].include?(k) ||
+                       ["PWD","HOME","SHELL","PATH", "PORT", "GEM_PATH"].include?(k) ||
                          k =~ /^REDIS_/ ||
                          k =~ /^DB_/
                      }
