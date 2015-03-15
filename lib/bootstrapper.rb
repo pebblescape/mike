@@ -59,8 +59,6 @@ class Bootstrapper
         '7001': '7001'
       }).start
 
-    make_container('pebbles/mike', 'mike', mike_opts.merge(ports: {"#{port}" => '5000'})).start
-
     title "Loading schema"
     migrator = make_container('pebbles/mike', nil,
       mike_opts.merge(entrypoint: '/scripts/run', cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
@@ -78,6 +76,8 @@ class Bootstrapper
     bootstrapper = make_container('pebbles/mike', nil, opts)
     bootstrapper.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
     bootstrapper.delete(force: true)
+
+    make_container('pebbles/mike', 'mike', mike_opts.merge(ports: {"#{port}" => '5000'})).start
   end
 
   def database
