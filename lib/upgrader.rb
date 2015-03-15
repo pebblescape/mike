@@ -43,6 +43,7 @@ class Upgrader
   end
 
   def mike_upgrade
+    run("rm -r public")
     log("********************************************************")
     log("*** Please be patient, next steps might take a while ***")
     log("********************************************************")
