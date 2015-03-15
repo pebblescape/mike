@@ -3,10 +3,11 @@ require_dependency 'upgrader'
 
 class V1::AdminController < ApiController
   def repos
-    repos = [
-      GitRepo.new(Rails.root.to_s, 'mike'),
-      GitRepo.new(Rails.root.join("public").to_s, 'dashboard')
-    ]
+    repos = [GitRepo.new(Rails.root.to_s, 'mike')]
+
+    if Mike.deployed?
+      repos << GitRepo.new('/dashboard/', 'dashboard')
+    end
 
     repos.map! do |r|
       result = {name: r.name, path: r.path, branch: r.branch }
