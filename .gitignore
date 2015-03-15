@@ -21,7 +21,6 @@
 /tmp
 
 spec/reports
-/public
 coverage/
 
 vendor/bundle
