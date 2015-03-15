@@ -9,14 +9,6 @@ gem 'redis-rails'
 gem 'sidekiq'
 gem 'sinatra', require: nil
 
-# # ASSETS
-gem 'sass-rails', '~> 5.0.1'
-gem 'less-rails'
-gem 'uglifier'
-gem 'therubyracer', require: 'v8'
-gem 'jquery-rails'
-gem 'slim'
-
 # BACKEND
 gem 'sentry-raven'
 gem 'skylight'
@@ -82,11 +74,4 @@ group :development do
   gem 'terminal-notifier-guard'
 end
 
-group :production do
-  gem 'rails_12factor'
-end
-
-# SERVERS
-gem 'thin', require: false
 gem 'puma', require: false
-gem 'unicorn', require: false
