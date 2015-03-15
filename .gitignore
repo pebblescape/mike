@@ -24,3 +24,4 @@ spec/reports
 coverage/
 
 vendor/bundle
+.env

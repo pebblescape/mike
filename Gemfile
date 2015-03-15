@@ -25,7 +25,6 @@ gem 'etcd'
 gem 'gitlab-grack', github: 'pebblescape/grack', require: 'grack'
 gem 'message_bus'
 
-# DEV & TEST
 group :test, :development do
   # dev helpers
   gem 'pry-rails'
@@ -55,14 +54,12 @@ group :test, :development do
   gem 'spring-commands-rspec'
 end
 
-# TEST
 group :test do
   gem 'webmock', require: false
   gem 'vcr', require: false
   gem 'minitest', require: false
 end
 
-# DEV
 group :development do
   gem 'binding_of_caller'
   gem 'better_errors'
@@ -72,6 +69,10 @@ group :development do
   gem 'guard'
   gem 'guard-rspec'
   gem 'terminal-notifier-guard'
+end
+
+group :production do
+  gem 'rails_12factor'
 end
 
 gem 'puma', require: false
