@@ -23,6 +23,26 @@ class Upgrader
     # see http://stackoverflow.com/a/12699604/84283
     run("git fetch")
     run("git reset --hard HEAD@{upstream}")
+
+    if @repo.name == 'mike'
+      mike_upgrade
+    else
+      log("***********************************************")
+      log("*** After refresh, upgrade will be complete ***")
+      log("***********************************************")
+      percent(100)
+      publish('status', 'complete')
+    end
+  rescue => ex
+    publish('status', 'failed')
+    STDERR.puts("FAILED TO UPGRADE")
+    STDERR.puts(ex.inspect)
+    raise
+  ensure
+    @repo.stop_upgrading
+  end
+
+  def mike_upgrade
     log("********************************************************")
     log("*** Please be patient, next steps might take a while ***")
     log("********************************************************")
@@ -30,14 +50,10 @@ class Upgrader
 
     run("env")
     run("bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment")
-    percent(25)
-
-    run("bundle exec rake db:migrate")
     percent(50)
 
-    log("***  Bundling assets. This might take a while *** ")
-    run("bundle exec rake assets:precompile")
-    percent(75)
+    run("bundle exec rake db:migrate")
+    percent(90)
 
     sidekiq_pid = `ps aux | grep sidekiq.*busy | grep -v grep | awk '{ print $2 }'`.strip.to_i
     if sidekiq_pid > 0
@@ -61,13 +77,6 @@ class Upgrader
     else
       log("Did not find puma master")
     end
-  rescue => ex
-    publish('status', 'failed')
-    STDERR.puts("FAILED TO UPGRADE")
-    STDERR.puts(ex.inspect)
-    raise
-  ensure
-    @repo.stop_upgrading
   end
 
   def publish(type, value)
@@ -88,7 +97,7 @@ class Upgrader
     clean_env["TERM"] = 'dumb' # claim we have a terminal
 
     retval = nil
-    Open3.popen2e(clean_env, "cd #{Rails.root} && chpst -u app -U app #{cmd} 2>&1") do |_in, out, wait_thread|
+    Open3.popen2e(clean_env, "cd #{@repo.path} && chpst -u app -U app #{cmd} 2>&1") do |_in, out, wait_thread|
       out.each do |line|
         line.rstrip! # the client adds newlines, so remove the one we're given
         log(line)

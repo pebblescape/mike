@@ -31,16 +31,18 @@ Rails.application.routes.draw do
     end
     resources :users
 
-    post 'admin/upgrade' => 'admin#upgrade'
-    delete 'admin/upgrade' => 'admin#reset_upgrade'
-    get 'admin/latest' => 'admin#latest'
-    get 'admin/gitinfo' => 'admin#gitinfo'
-    get 'admin/progress' => 'admin#progress'
-    get 'admin/ps' => 'admin#ps'
+    get "admin/upgrade" => "admin#index"
+    get "admin/repos" => "admin#repos"
+    get "admin/latest" => "admin#latest"
+    get "admin/progress" => "admin#progress"
+    get "admin/ps" => "admin#ps"
+    post "admin/upgrade" => "admin#upgrade"
+    delete "admin/upgrade" => "admin#reset_upgrade"
 
     post 'login' => 'users#login'
     get 'user' => 'users#whoami'
   end
 
-  root "landing#index"
+  get '*foo', :to => 'landing#index'
+  root :to => 'landing#index'
 end
