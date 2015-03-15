@@ -23,6 +23,9 @@ module Mike
     config.cache_store = RailsRedis.new_redis_store
     $redis = RailsRedis.new
 
+    # Disable asset pipeline
+    config.assets.enabled = false
+
     # http cache upstream
     config.action_dispatch.rack_cache = nil
 
