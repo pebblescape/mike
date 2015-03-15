@@ -42,7 +42,7 @@ class V1::AdminController < ApiController
   end
 
   def upgrade
-    repo = GitRepo.new(params[:path])
+    repo = GitRepo.new(params[:path], params[:name])
     Thread.new do
       upgrader = Upgrader.new(current_user.id, repo, params[:version])
       upgrader.upgrade
