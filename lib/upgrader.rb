@@ -48,7 +48,6 @@ class Upgrader
     log("********************************************************")
     percent(5)
 
-    run("env")
     run("bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment")
     percent(50)
 
