@@ -11,5 +11,10 @@ COPY . /archive
 RUN cd /archive && tar -c . | /scripts/run build
 RUN rm -rf /archive
 
+# RUN echo '* * * * * /scripts/run run bundle exec rake cron:minute' | crontab -i -
+RUN git clone https://github.com/pebblescape/dashboard.git /dashboard
+RUN chown -R app:app /dashboard
+RUN ln -sf /dashboard/build /app/public
+
 EXPOSE 5000
 ENTRYPOINT ["/usr/bin/supervisord"]
