@@ -44,6 +44,7 @@ class Upgrader
 
   def mike_upgrade
     run("rm -r public")
+    run("ln -sf /dashboard/build /app/public")
     log("********************************************************")
     log("*** Please be patient, next steps might take a while ***")
     log("********************************************************")
