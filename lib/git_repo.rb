@@ -50,7 +50,7 @@ class GitRepo
   end
 
   def url
-    url = run "config --get remote.origin.url"
+    url = run("config --get remote.origin.url")
     if url =~ /^git/
       # hack so it works with git urls
       url = "https://github.com/#{url.split(":")[1]}"
@@ -60,7 +60,7 @@ class GitRepo
   end
 
   def update!
-    `cd #{path} && git remote update`
+    run('remote update')
   end
 
   protected
@@ -75,11 +75,11 @@ class GitRepo
   end
 
   def tracking_branch
-    run "for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)"
+    run("for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)")
   end
 
   def run(cmd)
-    @memoize[cmd] ||= `cd #{path} && git #{cmd}`.strip
+    @memoize[cmd] ||= `cd #{path} && chpst -u app -U app git #{cmd}`.strip
   rescue => e
     p e
   end
