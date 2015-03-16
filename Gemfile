@@ -25,6 +25,8 @@ gem 'etcd'
 gem 'gitlab-grack', github: 'pebblescape/grack', require: 'grack'
 gem 'message_bus'
 
+gem 'test'
+
 group :test, :development do
   # dev helpers
   gem 'pry-rails'
