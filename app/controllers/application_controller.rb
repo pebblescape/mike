@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def json_error(status=403, id='invalid_access', details=nil)
-    json = { id: id, error: I18n.t('errors.#{id}') }
+    json = { id: id, error: I18n.t("errors.#{id}") }
     json.merge(details: details) if details
     render status: status, json: json
   end

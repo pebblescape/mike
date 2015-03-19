@@ -27,8 +27,8 @@ en:
     json_body_invalid: 'Request body does not contain valid JSON.'
     not_found: 'Not found'
 
-  login:
-    incorrect_username_email_or_password: "Incorrect username, email or password"
+    login:
+      incorrect_username_email_or_password: "Incorrect username, email or password"
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later"

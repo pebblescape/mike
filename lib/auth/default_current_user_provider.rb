@@ -1,9 +1,9 @@
 require_dependency "auth/current_user_provider"
 
 class Auth::DefaultCurrentUserProvider
-  TOKEN_KEY = 'api_key='
-  TOKEN_REGEX = /^Token /
-  AUTHN_PAIR_DELIMITERS = /(?:,|;|\t+)/
+  TOKEN_KEY ||= 'api_key='
+  TOKEN_REGEX ||= /^Token /
+  AUTHN_PAIR_DELIMITERS ||= /(?:,|;|\t+)/
 
   CURRENT_USER_KEY ||= "_MIKE_CURRENT_USER".freeze
   API_KEY ||= "api_key".freeze
@@ -102,5 +102,4 @@ class Auth::DefaultCurrentUserProvider
       end
     end
   end
-
 end

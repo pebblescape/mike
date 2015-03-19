@@ -1,5 +1,5 @@
 class AppSerializer < ApplicationSerializer
-  attributes :id, :name, :owner, :created_at, :updated_at, :config_vars, :build_size, :web_url
+  attributes :id, :name, :owner_id, :created_at, :updated_at, :config_vars, :build_size, :web_url
 
   def owner
     {

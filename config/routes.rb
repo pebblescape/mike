@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     receive_pack: true
   }), at: '/', constraints: lambda { |request| /^\/[\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
 
-  api_version(:module => "V1", :path => {:value => "api"}, :header => {:name => "Accept", :value => "application/vnd.pebblescape+json; version=1"}) do
+  api_version(:module => "V1", :header => {:name => "Accept", :value => "application/vnd.pebblescape+json; version=1"}) do
     resources :apps do
       resources :builds
       resources :releases, only: [:index, :show, :create]

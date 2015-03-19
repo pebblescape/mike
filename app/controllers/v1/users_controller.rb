@@ -1,5 +1,11 @@
 class V1::UsersController < ApiController
   skip_before_filter :ensure_logged_in, only: [:login]
+  before_filter :fetch_user, only: [:show]
+
+  def show
+    fail Mike::NotFound unless @user
+    render json: @user
+  end
 
   def whoami
     render json: current_user
@@ -41,5 +47,10 @@ class V1::UsersController < ApiController
 
   def invalid_credentials
     json_error(401, 'login.incorrect_username_email_or_password')
+  end
+
+  def fetch_user
+    params.require(:id)
+    @user = User.find(params[:id])
   end
 end

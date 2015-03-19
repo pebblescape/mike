@@ -2,8 +2,13 @@ class V1::AppsController < ApiController
   before_filter :fetch_app, only: [:show, :destroy]
 
   def index
-    apps = current_user.apps
-    render json: apps
+    if params[:name] || params[:id]
+      fetch_app
+      show
+    else
+      apps = current_user.apps
+      render json: apps
+    end
   end
 
   def create
@@ -45,8 +50,12 @@ class V1::AppsController < ApiController
   private
 
   def fetch_app
-    params.require(:id)
-    @app = App.find_by_uuid_or_name(params[:id])
+    if params[:name]
+      @app = App.find_by_name(params[:name])
+    else
+      params.require(:id)
+      @app = App.find_by_uuid_or_name(params[:id])
+    end
   end
 
   def app_params

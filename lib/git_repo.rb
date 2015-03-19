@@ -79,7 +79,8 @@ class GitRepo
   end
 
   def run(cmd)
-    @memoize[cmd] ||= `cd #{path} && chpst -u app -U app git #{cmd}`.strip
+    chpst = Mike.deployed? ? 'chpst -u app -U app' : ''
+    @memoize[cmd] ||= `cd #{path} && #{chpst} git #{cmd}`.strip
   rescue => e
     p e
   end
