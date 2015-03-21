@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
       post :push
     end
+    resources :favorites
     resources :users
 
     get "admin/upgrade" => "admin#index"

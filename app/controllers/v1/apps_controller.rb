@@ -3,12 +3,13 @@ class V1::AppsController < ApiController
 
   def index
     if params[:name] || params[:id]
-      fetch_app
-      show
+      app = App.find_by_uuid_or_name(params[:name] || params[:id])
+      apps = [app]
     else
       apps = current_user.apps
-      render json: apps
     end
+
+    render json: apps
   end
 
   def create
@@ -50,12 +51,8 @@ class V1::AppsController < ApiController
   private
 
   def fetch_app
-    if params[:name]
-      @app = App.find_by_name(params[:name])
-    else
-      params.require(:id)
-      @app = App.find_by_uuid_or_name(params[:id])
-    end
+    params.require(:id)
+    @app = App.find_by_uuid_or_name(params[:id])
   end
 
   def app_params
