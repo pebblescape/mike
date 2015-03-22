@@ -58,11 +58,10 @@ class V1::AdminController < ApiController
   end
 
   def ps
-    # Normally we don't run on OSX but this is useful for debugging
     if RUBY_PLATFORM =~ /darwin/
       ps_output = `ps aux -m`
     else
-      ps_output = `ps aux --sort -rss`
+      ps_output = `ps auxf --sort -rss`
     end
     render text: ps_output
   end
