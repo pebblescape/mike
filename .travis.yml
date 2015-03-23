@@ -1,0 +1,30 @@
+language: ruby
+
+env:
+  global:
+    - RUBY_GC_MALLOC_LIMIT=50000000
+rvm:
+  - 2.2
+
+services:
+  - redis-server
+
+addons:
+  postgresql: "9.3"
+
+sudo: false
+
+cache: bundler
+
+bundler_args: --without development --deployment --retry=3 --jobs=3
+
+before_script:
+  - openssl aes-256-cbc -K $encrypted_eba33511580c_key -iv $encrypted_eba33511580c_iv -in deploy.pem.enc -out deploy.pem -d
+  - cp config/database.ci.yml config/database.yml
+  - psql -c 'create database mike_test;' -U postgres
+  - bundle exec rake db:migrate
+
+script: 'bundle exec rspec'
+
+after_success:
+  - ./build.sh
