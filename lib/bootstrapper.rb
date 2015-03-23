@@ -39,7 +39,7 @@ class Bootstrapper
     }).start
 
     make_container('redis', 'mike-redis', restart: true, volumes_from: ["mike-data-volume"],
-      cmd: ['redis-server', '--appendonly', 'yes'], ports: {"#{redis_port}" => '6379'})).start
+      cmd: ['redis-server', '--appendonly', 'yes'], ports: {"#{redis_port}" => '6379'}).start
     make_container('postgres', 'mike-postgres', restart: true, volumes_from: ["mike-data-volume"],
       env: [
       "POSTGRES_PASSWORD=#{dbpass}",
