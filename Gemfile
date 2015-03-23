@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.2.0'
+ruby '2.2.1'
 
 gem 'rails', '4.2.0'
 gem 'pg'
@@ -21,7 +21,6 @@ gem 'fast_xor'
 gem 'lru_redux'
 gem 'docker-api'
 gem 'highline'
-gem 'etcd'
 gem 'gitlab-grack', github: 'pebblescape/grack', require: 'grack'
 gem 'message_bus'
 

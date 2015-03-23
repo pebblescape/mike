@@ -6,7 +6,7 @@ require 'shell_helpers'
 class Bootstrapper
   include ShellHelpers
 
-  attr_reader :adminname, :adminemail, :adminpassword, :dbpass, :pubip, :port, :raven, :skylight, :dbname
+  attr_reader :adminname, :adminemail, :adminpassword, :dbpass, :port, :redis_port, :raven, :skylight, :dbname
 
   def self.bootstrap; self.new.bootstrap; end
   def self.database; self.new.database; end
@@ -14,15 +14,14 @@ class Bootstrapper
   def bootstrap
     set_opts
 
-    # refresh_image('pebbles/pebblerunner')
-    # refresh_image('pebbles/mike')
-    # refresh_image('redis')
-    # refresh_image('postgres')
-    # refresh_image('busybox')
-    # refresh_image('quay.io/coreos/etcd:v2.0.0')
+    refresh_image('pebbles/pebblerunner')
+    refresh_image('pebbles/mike')
+    refresh_image('redis')
+    refresh_image('postgres')
+    refresh_image('busybox')
 
     title "Removing existing"
-    %w(mike mike-redis mike-postgres mike-etcd mike-data-volume mike-volume).each do |name|
+    %w(mike mike-redis mike-postgres mike-data-volume mike-volume).each do |name|
       cnt = get_container(name)
       next unless cnt
       cnt.stop
@@ -31,7 +30,6 @@ class Bootstrapper
     end
 
     make_container('busybox', 'mike-data-volume', volumes: {
-      "/default.etcd" => nil,
       "/data" => nil,
       "/var/lib/postgresql/data" => nil
     }).start
@@ -41,23 +39,12 @@ class Bootstrapper
     }).start
 
     make_container('redis', 'mike-redis', restart: true, volumes_from: ["mike-data-volume"],
-      cmd: ['redis-server', '--appendonly', 'yes']).start
+      cmd: ['redis-server', '--appendonly', 'yes'], ports: {"#{redis_port}" => '6379'})).start
     make_container('postgres', 'mike-postgres', restart: true, volumes_from: ["mike-data-volume"],
       env: [
       "POSTGRES_PASSWORD=#{dbpass}",
       "POSTGRES_USER=#{dbname}"
     ]).start
-
-    make_container('quay.io/coreos/etcd:v2.0.0', 'mike-etcd', restart: true, volumes_from: ["mike-data-volume"],
-      cmd: [
-        "-peer-addr", "#{pubip}:7001",
-        "-addr", "#{pubip}:4001",
-        "-bind-addr", "0.0.0.0:4001",
-        "-initial-cluster", "default=http://#{pubip}:7001"
-      ], ports: {
-        '4001': '4001',
-        '7001': '7001'
-      }).start
 
     title "Loading schema"
     migrator = make_container('pebbles/mike', nil,
@@ -121,8 +108,8 @@ class Bootstrapper
     @adminemail = ENV['ADMIN_EMAIL'] || ask("Admin email: ")
     @adminpassword = ENV['ADMIN_PASS'] || ask("Admin password: ")  { |q| q.echo = 'x' }
     @dbpass = ENV['DBPASS'] || ask('Database password: ') { |q| q.echo = 'x' }
-    @pubip = ENV['HOSTIP'] || ask('Host IP: ')
     @port = ENV['PORT'] || ask('Mike port: ')
+    @redis_port = ENV['REDIS_PORT'] || ask('Redis port: ')
     @raven = ENV['RAVEN_DSN'] || ask('Sentry key: ')
     @skylight = ENV['SKYLIGHT_AUTHENTICATION'] || ask('Skylight key: ')
 
@@ -141,13 +128,11 @@ class Bootstrapper
         "DBPASS=#{dbpass}",
         "DBUSER=#{dbname}",
         "DBNAME=#{dbname}",
-        "ETCD_HOST=etcd",
         "RAVEN_DSN=#{raven}",
         "SKYLIGHT_AUTHENTICATION=#{skylight}"
       ], links: {
         "mike-postgres" => "db",
-        "mike-redis" => "redis",
-        "mike-etcd" => "etcd"
+        "mike-redis" => "redis"
       }
     }
   end
