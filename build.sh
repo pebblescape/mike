@@ -7,9 +7,9 @@ ssh-add deploy.pem
 git config user.email "travis@rang.ee"
 git config user.name "Travis CI"
 
-git checkout -- .
+git checkout -- . || exit
 git remote add github git@github.com:pebblescape/mike.git || exit
 git fetch github || exit
 git checkout -t -b build github/build || exit
-git rebase github/master
+git merge github/master --no-edit || exit
 git push github build
