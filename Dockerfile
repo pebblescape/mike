@@ -15,7 +15,7 @@ RUN rm -rf /archive
 RUN rm -r /app/public
 RUN mkdir /dashboard
 RUN chown -R app:app /dashboard
-RUN chpst -u app -U app git clone https://github.com/pebblescape/dashboard.git /dashboard
+RUN chpst -u app -U app git clone https://github.com/pebblescape/dashboard.git --branch build --depth 1 /dashboard
 RUN chpst -u app -U app ln -sf /dashboard/build /app/public
 
 EXPOSE 5000
