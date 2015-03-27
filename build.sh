@@ -1,8 +1,8 @@
 #!/bin/bash
 
 eval `ssh-agent -s`
-chmod 600 deploy.pem
-ssh-add deploy.pem
+chmod 600 .travis/deploy.pem
+ssh-add .travis/deploy.pem
 
 git config user.email "travis@rang.ee"
 git config user.name "Travis CI"
