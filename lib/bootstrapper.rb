@@ -118,6 +118,7 @@ class Bootstrapper
 
   def mike_opts
     {
+      entrypoint: '/usr/bin/supervisord',
       restart: true,
       volumes: {'/var/run/docker.sock' => '/var/run/docker.sock'},
       volumes_from: ['mike-volume'],

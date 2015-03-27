@@ -19,4 +19,4 @@ RUN chpst -u app -U app git clone https://github.com/pebblescape/dashboard.git -
 RUN chpst -u app -U app ln -sf /dashboard/build /app/public
 
 EXPOSE 5000
-ENTRYPOINT ["/usr/bin/supervisord"]
+#ENTRYPOINT ["/usr/bin/supervisord"]
