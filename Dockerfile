@@ -6,7 +6,7 @@ ENV CURL_TIMEOUT 600
 ENV DATABASE_URL postgres://user:pass@127.0.0.1/dbname
 ENV REDIS_URL redis://localhost:6379
 
-COPY docker/boot /scripts/boot
+COPY docker/runit /scripts/runit
 RUN echo '* * * * * . /etc/envvars; /scripts/run run bundle exec rake cron:minute > /dev/null\n\
 */10 * * * * . /etc/envvars; /scripts/run run bundle exec rake cron:tenminutes > /dev/null\n\
 @hourly . /etc/envvars; /scripts/run run bundle exec rake cron:hour > /dev/null\n\
