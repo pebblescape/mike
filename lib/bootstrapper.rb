@@ -48,12 +48,12 @@ class Bootstrapper
 
     title "Loading schema"
     migrator = make_container('pebbles/mike', nil,
-      mike_opts.merge(entrypoint: '/scripts/run', cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
+      mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "db:schema:load"], restart: false))
     migrator.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
     migrator.delete(force: true)
 
     title "Bootstrapping database"
-    opts = mike_opts.merge(entrypoint: '/scripts/run', cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
+    opts = mike_opts.merge(cmd: ["run", "bundle", "exec", "rake", "bootstrap:database"], restart: false)
     opts[:env].concat([
       "ADMIN_NAME=#{adminname}",
       "ADMIN_EMAIL=#{adminemail}",
@@ -64,7 +64,7 @@ class Bootstrapper
     bootstrapper.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
     bootstrapper.delete(force: true)
 
-    make_container('pebbles/mike', 'mike', mike_opts.merge(ports: {"#{port}" => '5000'})).start
+    make_container('pebbles/mike', 'mike', mike_opts.merge(entrypoint: ['/scripts/boot'], ports: {"#{port}" => '5000'})).start
   end
 
   def database
@@ -118,7 +118,6 @@ class Bootstrapper
 
   def mike_opts
     {
-      entrypoint: '/usr/bin/supervisord',
       restart: true,
       volumes: {'/var/run/docker.sock' => '/var/run/docker.sock'},
       volumes_from: ['mike-volume'],
@@ -129,6 +128,7 @@ class Bootstrapper
         "DBPASS=#{dbpass}",
         "DBUSER=#{dbname}",
         "DBNAME=#{dbname}",
+        "SIDEKIQ_PASSWORD=#{adminpassword}",
         "RAVEN_DSN=#{raven}",
         "SKYLIGHT_AUTHENTICATION=#{skylight}"
       ], links: {

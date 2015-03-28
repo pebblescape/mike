@@ -4,11 +4,13 @@ require_dependency "admin_constraint"
 USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/ unless defined? USERNAME_ROUTE_FORMAT
 
 Rails.application.routes.draw do
-  if Rails.env.development?
-    mount Sidekiq::Web => "/sidekiq"
-  else
-    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new
+  if Rails.env.production?
+    Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+      username == 'admin' && password == ENV["SIDEKIQ_PASSWORD"]
+    end
   end
+
+  mount Sidekiq::Web => "/sidekiq"
 
   # /app.git/
   mount Grack::Bundle.new({
