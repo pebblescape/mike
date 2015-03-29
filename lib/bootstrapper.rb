@@ -64,7 +64,7 @@ class Bootstrapper
     bootstrapper.tap(&:start).attach { |stream, chunk| Kernel.puts chunk }
     bootstrapper.delete(force: true)
 
-    make_container('pebbles/mike', 'mike', mike_opts.merge(entrypoint: ['/scripts/runit'], ports: {"#{port}" => '5000'})).start
+    make_container('pebbles/mike', 'mike', mike_opts.merge(entrypoint: ['/bin/runit-wrapper'], ports: {"#{port}" => '5000'})).start
   end
 
   def database

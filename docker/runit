@@ -1,3 +1,0 @@
-#!/bin/sh
-export > /etc/envvars
-exec /usr/bin/runsvdir -P /etc/service
