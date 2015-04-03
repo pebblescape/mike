@@ -31,5 +31,5 @@ before_script:
 
 script: 'bundle exec rspec'
 
-after_success:
-  - ./build.sh
+# after_success:
+#   - ./build.sh

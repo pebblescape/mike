@@ -18,11 +18,4 @@ RUN ln -sf /etc/services-available/cron /etc/service
 RUN ln -sf /etc/services-available/app-web /etc/service
 RUN ln -sf /etc/services-available/app-worker /etc/service
 
-
-RUN rm -r /app/public
-RUN mkdir /dashboard
-RUN chown -R app:app /dashboard
-RUN chpst -u app -U app git clone https://github.com/pebblescape/dashboard.git --branch build /dashboard
-RUN chpst -u app -U app ln -sf /dashboard/build /app/public
-
 EXPOSE 5000

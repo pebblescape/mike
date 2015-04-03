@@ -1,29 +1,28 @@
 require_dependency 'git_repo'
 require_dependency 'upgrader'
+require_dependency 'dashboard_index'
 
 class V1::AdminController < ApiController
-  def repos
-    repos = [GitRepo.new(Rails.root.to_s, 'mike')]
+  def upgrades
+    repo = GitRepo.new(Rails.root.to_s, 'mike')
 
-    if Mike.deployed?
-      repos << GitRepo.new('/dashboard/', 'dashboard')
-    end
+    upgrades = [
+      {
+        id: 'mike',
+        name: 'mike',
+        path: Rails.root.to_s,
+        version: repo.latest_local_commit,
+        upgrading: repo.upgrading?,
+        url: 'https://github.com/pebblescape/mike'
+      }, {
+        id: 'dashboard',
+        name: 'dashboard',
+        version: DashboardIndex.current_version,
+        url: 'https://github.com/pebblescape/dashboard'
+      }
+    ]
 
-    repos.map! do |r|
-      result = {name: r.name, path: r.path, branch: r.branch }
-      if r.valid?
-        result[:id] = r.name.downcase.gsub(/[^a-z]/, '_').gsub(/_+/, '_').sub(/_$/, '')
-        result[:version] = r.latest_local_commit
-        result[:url] = r.url
-        if r.upgrading?
-          result[:upgrading] = true
-          result[:version] = r.upgrade_version
-        end
-      end
-      result
-    end
-
-    render json: {repos: repos}
+    render json: {upgrades: upgrades}
   end
 
   def progress
@@ -33,20 +32,32 @@ class V1::AdminController < ApiController
   end
 
   def latest
-    repo = GitRepo.new(params[:path])
-    repo.update! if Rails.env == 'production'
+    case params[:name]
+    when 'mike'
+      repo = GitRepo.new(Rails.root.to_s, 'mike')
+      repo.update! if Rails.env == 'production'
+      result = {version: repo.latest_origin_commit,
+                commits_behind: repo.commits_behind,
+                date: repo.latest_origin_commit_date }
+    when 'dashboard'
+      result = {version: DashboardIndex.latest_version}
+    end
 
-    render json: {latest: {version: repo.latest_origin_commit,
-                           commits_behind: repo.commits_behind,
-                           date: repo.latest_origin_commit_date } }
+    render json: {latest: result }
   end
 
   def upgrade
-    repo = GitRepo.new(params[:path], params[:name])
-    Thread.new do
-      upgrader = Upgrader.new(current_user.id, repo, params[:version])
-      upgrader.upgrade
+    case params[:name]
+    when 'mike'
+      repo = GitRepo.new(params[:path], params[:name])
+      Thread.new do
+        upgrader = Upgrader.new(current_user.id, repo, params[:version])
+        upgrader.upgrade
+      end
+    when 'dashboard'
+      DashboardIndex.cache_latest('master')
     end
+
     render text: "OK"
   end
 

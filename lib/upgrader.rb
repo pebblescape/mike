@@ -24,25 +24,6 @@ class Upgrader
     run("git fetch")
     run("git reset --hard HEAD@{upstream}")
 
-    if @repo.name == 'mike'
-      mike_upgrade
-    else
-      log("***********************************************")
-      log("*** After refresh, upgrade will be complete ***")
-      log("***********************************************")
-      percent(100)
-      publish('status', 'complete')
-    end
-  rescue => ex
-    publish('status', 'failed')
-    STDERR.puts("FAILED TO UPGRADE")
-    STDERR.puts(ex.inspect)
-    raise
-  ensure
-    @repo.stop_upgrading
-  end
-
-  def mike_upgrade
     run("rm -r public")
     run("ln -sf /dashboard/build /app/public")
     log("********************************************************")
@@ -78,6 +59,13 @@ class Upgrader
     else
       log("Did not find puma master")
     end
+  rescue => ex
+    publish('status', 'failed')
+    STDERR.puts("FAILED TO UPGRADE")
+    STDERR.puts(ex.inspect)
+    raise
+  ensure
+    @repo.stop_upgrading
   end
 
   def publish(type, value)

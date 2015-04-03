@@ -34,11 +34,10 @@ Rails.application.routes.draw do
     resources :favorites
     resources :users
 
-    get "admin/upgrade" => "admin#index"
-    get "admin/repos" => "admin#repos"
+    get "admin/ps" => "admin#ps"
+    get "admin/upgrades" => "admin#upgrades"
     get "admin/latest" => "admin#latest"
     get "admin/progress" => "admin#progress"
-    get "admin/ps" => "admin#ps"
     post "admin/upgrade" => "admin#upgrade"
     delete "admin/upgrade" => "admin#reset_upgrade"
 
